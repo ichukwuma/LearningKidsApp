@@ -1,3 +1,3 @@
 # LearningKidsApp
 
-hi yall I am just pushing here so yall can pull :D - IJ 
+HOW TO START EXPO PROJECT: run npx expo start in terminal
