@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "learningkidsapp",
+    "slug": "learningkidsapp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./assets/images/hats/banana.png",
+            "./assets/images/hats/pizza.png",
+            "./assets/images/hats/icecream.png"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
