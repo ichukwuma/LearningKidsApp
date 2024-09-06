@@ -1,6 +1,5 @@
 import { Text } from 'react-native';
 
 export default function Page() {
-  return <Text>Corgi Escape</Text>;
-
+  return <Text>Corgi Escape Game</Text>;
 }

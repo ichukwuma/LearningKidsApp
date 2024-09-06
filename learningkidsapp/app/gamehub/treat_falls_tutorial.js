@@ -1,6 +1,5 @@
 import { Text } from 'react-native';
 
 export default function Page() {
-  return <Text>Corgi Escape Tutorial Screen</Text>;
-
+  return <Text>Treat Falls Tutorial</Text>;
 }
