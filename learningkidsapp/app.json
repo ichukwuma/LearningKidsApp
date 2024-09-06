@@ -26,6 +26,6 @@
     "plugins": [
       "expo-router"
     ],
-      "scheme": "learningkidsapp"
+    "scheme": "learningkidsapp"
   }
 }
