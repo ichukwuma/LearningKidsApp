@@ -17,6 +17,7 @@ export default function Button(clickButton) {
 
     {/*Buttons for screens*/}
     const { onPressGameHub, gameHubScreenBtn = 'Game Hub' } = clickButton;
+    const { onPressHome, homeScreenBtn = 'Home' } = clickButton;
 
   return (
     <View style={styles.container}>
@@ -24,6 +25,14 @@ export default function Button(clickButton) {
             <Link href="/gamehub/gamehub_mainscreen" asChild>
                 <Pressable style={styles.button} onPressGameHub={onPressGameHub}>
                     <Text style={styles.text}>{gameHubScreenBtn}</Text>
+                </Pressable>
+            </Link>
+
+
+            {/*Linking back to home screen*/}
+            <Link href="/home/home" asChild>
+                <Pressable style={styles.button} onPressHome={onPressHome}>
+                    <Text style={styles.text}>{homeScreenBtn}</Text>
                 </Pressable>
             </Link>
 
