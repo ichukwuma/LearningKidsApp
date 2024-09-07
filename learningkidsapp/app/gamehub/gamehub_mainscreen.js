@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet, Image} from 'react-native';
 import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 
 
@@ -22,8 +23,11 @@ export default function Button(clickButton) {
     const { onPressTreatFallsStart, treatFallsStartBtn = 'Start' } = clickButton;
     const { onPressIndex, indexScreenBtn = 'Index.Js' } = clickButton;
 
+    
+
   return (
     <View style={styles.container}>
+        <LinearGradient colors={['#6495ED', '#B0C4DE','#E0FFFF','#6495ED']} style={styles.background}/>
 
 
         <View  style={styles.coinAndGameHubTextContainer}>
@@ -86,6 +90,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',       
         backgroundColor: '#A7C7E7',
+    },
+    background: {
+        ...StyleSheet.absoluteFillObject, // Fill the entire container with this gradient color
+        width: '100%',
+        height: '100%',
     },
     corgiEscapeContainer: {
         alignItems: 'center',
