@@ -10,6 +10,14 @@ export default function Button(clickButton){
 return (
     <View style={styles.container}>
 
+        <View style={styles.GameHubText}>
+            <Text style={styles.GameHubText}>Learning Kids</Text>
+            
+        </View>
+
+        <View style={styles.corgiInHatContainer}>
+            <Image source={require('../../assets/dogwithhat.png')}style={styles.dogHatImage} />
+        </View>
 
         {/*login button*/}
         <Link href="/gamehub/login" asChild>
@@ -18,6 +26,7 @@ return (
             </Pressable>
         </Link>
 
+        {/*sign up button*/}
         <Link href="/gamehub/signup" asChild>
             <Pressable style={styles.button} onPressSignUpBtn={onPressSignUpBtn}>
                 <Text style={styles.text}>{SignUpBtn}</Text>
@@ -25,11 +34,6 @@ return (
         </Link>
 
     </View>
-
-
-
-
-
 
     );
 }
@@ -40,6 +44,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16, // Padding around the container
+    },
+
+    corgiInHatContainer: {
+        marginBottom: 0,
+        alignContent: 'center'
     },
     corgiEscapeContainer: {
         marginBottom: 30,
@@ -100,5 +109,10 @@ const styles = StyleSheet.create({
     coinContainer: {
         alignItems: 'center', // Center align the image and title within the container
     },
+
+    dogHatImage: {
+        width: 125,
+        height: 125,
+    }
 
   });
