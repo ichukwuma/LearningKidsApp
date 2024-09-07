@@ -1,10 +1,20 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet, Image} from 'react-native';
+import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { Link } from 'expo-router';
 
 
 
 export default function Button(clickButton) {
+
+    {/*loading fonts here */}
+    let [fontsLoaded] = useFonts({
+        EBGaramond_600SemiBold,EBGaramond_800ExtraBold
+    });
+    if (!fontsLoaded) {
+        return null;
+      }
+
     const { onPressCorgiEscapeTutorial, corgiEscapeTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressCorgiEscapeStart, corgiEscapeStartBtn = 'Start' } = clickButton;
     const { onPressTreatFallsTutorial, treatFallsTutorialBtn = 'Tutorial' } = clickButton;
@@ -12,6 +22,8 @@ export default function Button(clickButton) {
   return (
     
     <View style={styles.container}>
+
+
         <View  style={styles.coinAndGameHubTextContainer}>
             {/* game hub header text */}
             <Text style={styles.GameHubText}>Game Hub</Text>
@@ -64,38 +76,43 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 16, // Padding around the container
+        padding: 16,
+        backgroundColor: '#A7C7E7',
     },
     corgiEscapeContainer: {
-        marginBottom: 30,
+        marginBottom: 20,
         alignItems: 'center'
     },
     treatFallsContainer:{
-        marginBottom: 30,
+        marginBottom: 20,
         alignItems: 'center'
     },
     button: {
         width: 200, // Set a fixed width or use maxWidth
         padding: 10,
-        backgroundColor: '#007bff',
+        backgroundColor: '#FAC898',
         borderRadius: 5,
-        marginVertical: 10, // Vertical spacing between buttons
+        marginVertical: 10, 
         alignItems: 'center'
     },
     text: {
-        color: '#fff',
+        color: '#000000',
         fontSize: 16,
+        fontFamily: 'EBGaramond_800ExtraBold'
     },
     GameHubText: {
         fontSize: 40,
+        fontFamily: 'EBGaramond_800ExtraBold'
         
     },
     CorgiEscapeText:{
-        fontSize: 25
+        fontSize: 25,
+        fontFamily: 'EBGaramond_600SemiBold'
     },
     TreatFallsText:{
         fontSize: 25,
-        textAlign: 'center' 
+        textAlign: 'center',
+        fontFamily: 'EBGaramond_600SemiBold',
     },
     coinImage: {
         width: 75, 
@@ -113,14 +130,14 @@ const styles = StyleSheet.create({
 
     coinTitle: {
         fontSize: 14,
-        color: '#333',
-        textAlign: 'center', // Center the title under the image
-        marginTop: 0, // Space between the coin image and the title
+        color: '#000000',
+        textAlign: 'center',
+        marginTop: 0,
+        fontFamily: 'EBGaramond_600SemiBold'
     },
     coinAndGameHubTextContainer: {
        flexDirection: 'row', 
        alignItems: 'center', 
-       marginBottom: 20, 
     },
     coinContainer: {
         alignItems: 'center', // Center align the image and title within the container
