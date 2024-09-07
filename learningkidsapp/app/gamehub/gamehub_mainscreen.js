@@ -15,12 +15,14 @@ export default function Button(clickButton) {
         return null;
       }
 
+    {/*Buttons for screens*/}
     const { onPressCorgiEscapeTutorial, corgiEscapeTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressCorgiEscapeStart, corgiEscapeStartBtn = 'Start' } = clickButton;
     const { onPressTreatFallsTutorial, treatFallsTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressTreatFallsStart, treatFallsStartBtn = 'Start' } = clickButton;
+    const { onPressIndex, indexScreenBtn = 'Index.Js' } = clickButton;
+
   return (
-    
     <View style={styles.container}>
 
 
@@ -66,6 +68,14 @@ export default function Button(clickButton) {
                 </Pressable>
             </Link>
         </View>
+
+            {/*Linking back to index.js page*/}
+            <Link href="/" asChild>
+                <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
+                    <Text style={styles.text}>{indexScreenBtn}</Text>
+                </Pressable>
+            </Link>
+
     </View>
 
   );
@@ -73,24 +83,28 @@ export default function Button(clickButton) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
+        alignItems: 'center',       
         backgroundColor: '#A7C7E7',
     },
     corgiEscapeContainer: {
-        marginBottom: 20,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     treatFallsContainer:{
-        marginBottom: 20,
+        alignItems: 'center'
+    },
+    indexButton:{
+        backgroundColor: '#FAC898',
+        width: 175, 
+        padding: 10,
+        borderRadius: 5,
+        marginVertical: 10, 
         alignItems: 'center'
     },
     button: {
-        width: 200, // Set a fixed width or use maxWidth
+        width: 175, // Set a fixed width or use maxWidth
         padding: 10,
-        backgroundColor: '#FAC898',
+        backgroundColor: '#f7e7b4',
         borderRadius: 5,
         marginVertical: 10, 
         alignItems: 'center'
@@ -115,8 +129,8 @@ const styles = StyleSheet.create({
         fontFamily: 'EBGaramond_600SemiBold',
     },
     coinImage: {
-        width: 75, 
-        height: 75, 
+        width: 70, 
+        height: 70, 
         
     },
     doggoImage: {
