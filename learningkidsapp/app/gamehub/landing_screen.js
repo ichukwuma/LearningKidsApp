@@ -12,13 +12,13 @@ return (
 
 
         {/*login button*/}
-        <Link href="/login" asChild>
+        <Link href="/gamehub/login" asChild>
             <Pressable style={styles.button} onPressLoginBtn={onPressLoginBtn}>
                 <Text style={styles.text}>{LoginBtn}</Text>
             </Pressable>
         </Link>
 
-        <Link href="/signup" asChild>
+        <Link href="/gamehub/signup" asChild>
             <Pressable style={styles.button} onPressSignUpBtn={onPressSignUpBtn}>
                 <Text style={styles.text}>{SignUpBtn}</Text>
             </Pressable>
