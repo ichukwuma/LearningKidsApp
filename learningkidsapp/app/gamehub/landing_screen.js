@@ -9,12 +9,21 @@ export default function Button(clickButton){
 
 return (
     <View style={styles.container}>
+
+
         {/*login button*/}
         <Link href="/login" asChild>
             <Pressable style={styles.button} onPressLoginBtn={onPressLoginBtn}>
                 <Text style={styles.text}>{LoginBtn}</Text>
             </Pressable>
         </Link>
+
+        <Link href="/signup" asChild>
+            <Pressable style={styles.button} onPressSignUpBtn={onPressSignUpBtn}>
+                <Text style={styles.text}>{SignUpBtn}</Text>
+            </Pressable>
+        </Link>
+
     </View>
 
 
