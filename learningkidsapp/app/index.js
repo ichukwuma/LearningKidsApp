@@ -37,6 +37,12 @@ export default function Button(clickButton) {
                 </Pressable>
             </Link>
 
+            <Link href="/signup/Screen1" asChild>
+        <Pressable>
+          <Text>SignUp</Text>
+        </Pressable>
+      </Link>
+
     </View>
 
   );
