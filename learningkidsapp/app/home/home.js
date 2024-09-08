@@ -43,6 +43,8 @@ export default function Button(clickButton) {
   );
 }
 
+//hi this is for styles
+
 const styles = StyleSheet.create({
 container: {
   justifyContent: 'center',
