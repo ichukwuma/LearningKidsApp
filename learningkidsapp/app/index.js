@@ -4,6 +4,7 @@ import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-
 import { Link } from 'expo-router';
 
 
+//index screen for entry point of app
 
 export default function Button(clickButton) {
 
