@@ -5,9 +5,7 @@ import { useState } from 'react';
 import { TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
-
-
-/*import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';*/
+import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 
 export default function ChildSignup() {
 
@@ -19,25 +17,24 @@ if (!fontsLoaded) {
     return null;
   }*/
 
-  const [email, setEmail] = useState(''); /*Inputs for the emails, usernames and pw*/
+  const [email, setEmail] = useState(''); /*Inputs for the child name and user*/
   const [childfirstname, setchildFirstName] = useState('');
   const [childlastname, setchildLastName] = useState('');
   const [username, setUsername] = useState('');
   const router = useRouter(); // Initialize useRouter
 
-  const handlechildSignup = () => { /*Pressing sign up button*/
-    if (!email || !childfirstname || !username || !childlastname) {
+  const handlechildSignup = () => { 
+    if (!childfirstname || !username || !childlastname) {
       Alert.alert('Error', 'All fields are required!');
     } else {
       // Here you would typically send the data to your backend
-      Alert.alert('Successful sign up');
+      Alert.alert('Successful child sign up');
       // Reset form field
-      setEmail('');
       setchildFirstName('');
       setchildLastName('');
       setUsername('');
 // Navigate to Screen2
-router.push('/signup/Screen2');
+router.push('/signup/EmergencyContact');
     }
   };
 
@@ -89,16 +86,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#A7C7E7',
   },
   title: {
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    fontFamily: 'EBGaramond_800ExtraBold',
   },
 
   image: {
-    width: 200,  // Adjust the width and height as needed
+    width: 200,  
     height: 200,
-    marginBottom: 20, // Space between the image and input fields
+    marginBottom: 20,
     alignSelf: 'center',
   },
   
@@ -110,10 +108,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 15,
     fontWeight: 'bold',
+    fontFamily: 'EBGaramond_800ExtraBold',
+
   },
 
   button: {
-    width: 200, // Set a fixed width or use maxWidth
+    width: 200, 
     padding: 10,
     backgroundColor: '#f7e7b4',
     borderRadius: 5,

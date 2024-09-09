@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
-import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
+import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 
 export default function ParentSignup() {
 
@@ -96,10 +96,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#A7C7E7',
   },
   title: {
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
+    fontFamily: 'EBGaramond_800ExtraBold',
   },
 
 TextInput: {
@@ -107,9 +108,9 @@ TextInput: {
 },
 
   image: {
-    width: 200,  // Adjust the width and height as needed
+    width: 200,  
     height: 200,
-    marginBottom: 20, // Space between the image and input fields
+    marginBottom: 20, 
     alignSelf: 'center',
   },
   
@@ -121,10 +122,11 @@ TextInput: {
     paddingHorizontal: 10,
     marginBottom: 15,
     fontWeight: 'bold',
+    fontFamily: 'EBGaramond_800ExtraBold',
   },
 
   button: {
-    width: 200, // Set a fixed width or use maxWidth
+    width: 200, 
     padding: 10,
     backgroundColor: '#f7e7b4',
     borderRadius: 5,
