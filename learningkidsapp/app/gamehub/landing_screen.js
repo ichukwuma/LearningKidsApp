@@ -10,13 +10,15 @@ export default function Button(clickButton){
 return (
     <View style={styles.container}>
 
+        <Image source={require('../../assets/LearningKidsLogo.png')}style={styles.teamLogo} />
+
         <View style={styles.GameHubText}>
             <Text style={styles.GameHubText}>Learning Kids</Text>
             
         </View>
 
         <View style={styles.corgiInHatContainer}>
-            <Image source={require('../../assets/dogwithhat.png')}style={styles.dogHatImage} />
+        <Image source={require('../../assets/dogwithhat.png')}style={styles.dogHatImage} />
         </View>
 
         {/*login button*/}
@@ -44,7 +46,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 16, // Padding around the container
+        backgroundColor: '#A7C7E7',
+        
     },
+
+    teamLogo: {
+        alignContent: 'center',
+        width: 250,
+        height: 250,
+    
+
+    },
+
 
     corgiInHatContainer: {
         marginBottom: 0,
@@ -113,6 +126,6 @@ const styles = StyleSheet.create({
     dogHatImage: {
         width: 125,
         height: 125,
-    }
+    },
 
   });

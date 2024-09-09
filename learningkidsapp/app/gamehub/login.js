@@ -1,5 +1,6 @@
+import { Link } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native'
+import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 
 export default function LoginForm() {
   const [click, setClick] = useState(false);
@@ -8,6 +9,8 @@ export default function LoginForm() {
 
   return (
     <SafeAreaView style={styles.container}>
+
+
       <Image source={require('../../assets/dogwithhat.png')} style={styles.dogHatImage}/>
       <Text style={styles.title}>Login</Text>
       <View style={styles.inputView}>
@@ -15,18 +18,31 @@ export default function LoginForm() {
           autoCorrect={false} autoCapitalize='none'/>
         </View>
 
+        <Pressable>
+          <Text style= {styles.HyperLinkText}>Forgot Username</Text>
+        </Pressable>
+
         <View style={styles.inputView}>
         <TextInput secureTextEntry={true} style={styles.input} placeholder='PASSWORD' onChangetext={setPassword}
           autoCorrect={false} autoCapitalize='none'/>
           </View>
-      
+      <Pressable>
+        <Text style= {styles.HyperLinkText}>Forgot Password</Text>
+      </Pressable>
 
-      <View style={styles.buttonView}>
+
+
+      <View style={{padding: 7}}>
         <Pressable style={styles.button} onPress={()=>Alert.alert("Login Successful")}>
             <Text style={styles.buttonText}>LOGIN</Text>
         </Pressable>
-      
       </View>
+     <View style={{flexDirection: 'row'}}>
+      <Text>Didn't Sign Up? </Text> 
+        <Link href="/gamehub/signup" asChild>
+          <Pressable><Text style = {styles.HyperLinkText}>Register Here</Text></Pressable>
+        </Link>
+     </View>
 
 
 
@@ -39,25 +55,26 @@ export default function LoginForm() {
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16, // Padding around the container
-    
-  },
+container: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 16, // Padding around the container
+  backgroundColor: '#A7C7E7',
+  
+},
 
-  inputText:{
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-  },
+inputText:{
+  height: 40,
+  margin: 12,
+  borderWidth: 1,
+  padding: 10,
+},
 
-  dogHatImage: {
-    width: 125,
-    height: 100,
-    alignItems: 'center'
+dogHatImage: {
+  width: 125,
+  height: 100,
+  alignItems: 'center'
 },
 
 title : {
@@ -74,40 +91,46 @@ inputView : {
   gap : 15,
   width : "100%",
   paddingHorizontal : 40,
-  paddingVertical: 5,
+  paddingTop: 5,
+  paddingBottom: 0,
+ 
   marginBottom  :5,
   alignItems: 'center',
 },
 
+//input bubble
 input : {
-  height : 50,
-  paddingHorizontal : 20,
+  width: 177,
+  height : 40,
+  paddingHorizontal : 8,
   borderWidth : 1,
-  borderRadius: 7,
+  borderRadius: 20,
   alignItems: 'center',
   alignContent: 'center',
   
   
 },
 
-buttonView :{
+/*buttonView :{
   width :"100%",
   paddingHorizontal : 50,
   alignItems: 'center',
-  paddingTop: 3,
+  paddingTop: 7,
+  
 },
-
+*/
 button : {
   height : 45,
   width: 150,
-  borderColor : "gray",
+  borderColor : "black",
   borderWidth  : 1,
-  borderRadius : 5,
+  borderRadius : 25,
   paddingHorizontal : 20,
   paddingVertical: 20,
   alignItems : "center",
   justifyContent : "center",
   alignContent: 'center',
+
   
  
 },
@@ -115,8 +138,19 @@ button : {
   buttonText : {
     fontSize : 21,
     textAlign: "center",
+    fontWeight: 'bold',
   },
 
+  HyperLinkText: {
+    color: '#0000EE',
+    textDecorationLine: 'underline',
+    //paddingVertical: 5,
+  },
 
+  signUpText: {
+
+
+
+  }
 
 });
