@@ -38,7 +38,7 @@ export default function LoginForm() {
         </Pressable>
       </View>
      <View style={{flexDirection: 'row'}}>
-      <Text>Didn't Sign Up? </Text> 
+      <Text>Don't Have an Account </Text> 
         <Link href="/gamehub/signup" asChild>
           <Pressable><Text style = {styles.HyperLinkText}>Register Here</Text></Pressable>
         </Link>
@@ -104,7 +104,7 @@ input : {
   height : 40,
   paddingHorizontal : 8,
   borderWidth : 1,
-  borderRadius: 20,
+  borderRadius: 11,
   alignItems: 'center',
   alignContent: 'center',
   

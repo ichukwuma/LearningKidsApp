@@ -16,8 +16,12 @@ export default function Page() {
         <TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>
       </View>
 
+      <View style={styles.answerArea}>
+        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
+      </View>
       
-
 
 
     </SafeAreaView>
@@ -39,6 +43,7 @@ const styles = StyleSheet.create({
   hearts: {
     flexDirection: 'row',
     justifyContent: 'right',
+    gap: 5,
   },
 
   score: {
@@ -59,14 +64,44 @@ const styles = StyleSheet.create({
     alignSelf: 'baseline',
     alignContent: 'center',
     borderRadius: 15,
+    height: 250,
+    width: 450,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
+
   questionArea:{
     justifyContent: 'center',
     flexDirection: 'row',
     alignContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingTop: 50,
   },
 
+  answerArea: {
+    //display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    gap: 75,
+    
+  },
+
+  answers: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderWidth: 1,
+    alignContent: 'center',
+    borderRadius: 15,
+    height: 250,
+    width: 450,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+
+  },
   
 
 });
