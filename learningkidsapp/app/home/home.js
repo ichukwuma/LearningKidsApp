@@ -21,6 +21,7 @@ export default function Button(clickButton) {
     const { onPressSettings, settingsScreenBtn = 'Settings' } = clickButton;
     const { onPressProfile, profileScreenBtn = 'Profile' } = clickButton;
     const { onPressLeaderboard, leaderboardScreenBtn = 'Leaderboard' } = clickButton;
+    const { onPressGameHub, gameHubScreenBtn = 'Game Hub' } = clickButton;
 
   return (
     <View style={styles.container}>
@@ -58,6 +59,12 @@ export default function Button(clickButton) {
 
             
 
+            {/*Linking to Game hub page*/}
+            <Link href="/gamehub/gamehub_mainscreen" asChild>
+                <Pressable style={styles.button} onPressGameHub={onPressGameHub}>
+                    <Text style={styles.text}>{gameHubScreenBtn}</Text>
+                </Pressable>
+            </Link>
             {/*Linking back to index.js page*/}
             <Link href="/" asChild>
                 <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
