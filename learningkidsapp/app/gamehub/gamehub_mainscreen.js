@@ -1,17 +1,35 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet, Image} from 'react-native';
+import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 
 
 
 export default function Button(clickButton) {
+
+    {/*loading fonts here */}
+    let [fontsLoaded] = useFonts({
+        EBGaramond_600SemiBold,EBGaramond_800ExtraBold
+    });
+    if (!fontsLoaded) {
+        return null;
+      }
+
+    {/*Buttons for screens*/}
     const { onPressCorgiEscapeTutorial, corgiEscapeTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressCorgiEscapeStart, corgiEscapeStartBtn = 'Start' } = clickButton;
     const { onPressTreatFallsTutorial, treatFallsTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressTreatFallsStart, treatFallsStartBtn = 'Start' } = clickButton;
-  return (
+    const { onPressIndex, indexScreenBtn = 'Index.Js' } = clickButton;
+
     
+
+  return (
     <View style={styles.container}>
+        <LinearGradient colors={['#6495ED', '#B0C4DE','#E0FFFF','#6495ED']} style={styles.background}/>
+
+
         <View  style={styles.coinAndGameHubTextContainer}>
             {/* game hub header text */}
             <Text style={styles.GameHubText}>Game Hub</Text>
@@ -54,6 +72,14 @@ export default function Button(clickButton) {
                 </Pressable>
             </Link>
         </View>
+
+            {/*Linking back to index.js page*/}
+            <Link href="/" asChild>
+                <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
+                    <Text style={styles.text}>{indexScreenBtn}</Text>
+                </Pressable>
+            </Link>
+
     </View>
 
   );
@@ -61,45 +87,59 @@ export default function Button(clickButton) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16, // Padding around the container
+        alignItems: 'center',       
+        backgroundColor: '#A7C7E7',
+    },
+    background: {
+        ...StyleSheet.absoluteFillObject, // Fill the entire container with this gradient color
+        width: '100%',
+        height: '100%',
     },
     corgiEscapeContainer: {
-        marginBottom: 30,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     treatFallsContainer:{
-        marginBottom: 30,
+        alignItems: 'center'
+    },
+    indexButton:{
+        backgroundColor: '#FAC898',
+        width: 175, 
+        padding: 10,
+        borderRadius: 5,
+        marginVertical: 10, 
         alignItems: 'center'
     },
     button: {
-        width: 200, // Set a fixed width or use maxWidth
+        width: 175, // Set a fixed width or use maxWidth
         padding: 10,
-        backgroundColor: '#007bff',
+        backgroundColor: '#f7e7b4',
         borderRadius: 5,
-        marginVertical: 10, // Vertical spacing between buttons
+        marginVertical: 10, 
         alignItems: 'center'
     },
     text: {
-        color: '#fff',
+        color: '#000000',
         fontSize: 16,
+        fontFamily: 'EBGaramond_800ExtraBold'
     },
     GameHubText: {
         fontSize: 40,
+        fontFamily: 'EBGaramond_800ExtraBold'
         
     },
     CorgiEscapeText:{
-        fontSize: 25
+        fontSize: 25,
+        fontFamily: 'EBGaramond_600SemiBold'
     },
     TreatFallsText:{
         fontSize: 25,
-        textAlign: 'center' 
+        textAlign: 'center',
+        fontFamily: 'EBGaramond_600SemiBold',
     },
     coinImage: {
-        width: 75, 
-        height: 75, 
+        width: 70, 
+        height: 70, 
         
     },
     doggoImage: {
@@ -113,14 +153,14 @@ const styles = StyleSheet.create({
 
     coinTitle: {
         fontSize: 14,
-        color: '#333',
-        textAlign: 'center', // Center the title under the image
-        marginTop: 0, // Space between the coin image and the title
+        color: '#000000',
+        textAlign: 'center',
+        marginTop: 0,
+        fontFamily: 'EBGaramond_600SemiBold'
     },
     coinAndGameHubTextContainer: {
        flexDirection: 'row', 
        alignItems: 'center', 
-       marginBottom: 20, 
     },
     coinContainer: {
         alignItems: 'center', // Center align the image and title within the container

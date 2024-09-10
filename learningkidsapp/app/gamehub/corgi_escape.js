@@ -1,3 +1,4 @@
+
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
 export default function Page() {
@@ -100,6 +101,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
 
   },
-  
-
 });
