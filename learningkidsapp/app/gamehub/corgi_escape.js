@@ -53,8 +53,6 @@ const styles = StyleSheet.create({
 
   scoreText:{
     fontSize: 25,
-
-
   },
 
   questions:{
@@ -65,7 +63,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     borderRadius: 15,
     height: 250,
-    width: 450,
+    width: 1100,
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
