@@ -21,6 +21,7 @@ export default function Button(clickButton) {
     const { onPressHome, homeScreenBtn = 'Home' } = clickButton;
 
   return (
+
     <View style={styles.container}>
             {/*Linking back to index.js page*/}
             <Link href="/gamehub/gamehub_mainscreen" asChild>

@@ -1,52 +1,106 @@
-import React from 'react';
-import { Pressable, Text, View, StyleSheet} from 'react-native';
-import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
-import { Link } from 'expo-router';
 
-
-
-export default function Button(clickButton) {
-
-    {/*loading fonts here */}
-    let [fontsLoaded] = useFonts({
-        EBGaramond_600SemiBold,EBGaramond_800ExtraBold
-    });
-    if (!fontsLoaded) {
-        return null;
-      }
-
-    {/*Buttons for screens*/}
-    const { onPressIndex, indexScreenBtn = 'Index.Js' } = clickButton;
-
+import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import React, { useState } from 'react';
+export default function Page() {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.hearts}>
+        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
+        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
+        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
+      </View>
+      <View style={styles.score}>
+        <Text style={styles.scoreText}>Score: 0</Text>
+      </View>
 
-            <Text>Corgi Escape Game Screen</Text>
+      <View style={styles.questionArea}>
+        <TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>
+      </View>
 
-            {/*Linking back to index.js page*/}
-            <Link href="/" asChild>
-                <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
-                    <Text style={styles.text}>{indexScreenBtn}</Text>
-                </Pressable>
-            </Link>
+      <View style={styles.answerArea}>
+        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
+      </View>
+      
 
-    </View>
+
+    </SafeAreaView>
+
 
   );
 }
 
 const styles = StyleSheet.create({
-container: {
-  justifyContent: 'center',
-  alignItems: 'center',       
-  backgroundColor: '#A7C7E7',
-},
-indexButton:{
-  backgroundColor: '#FAC898',
-  width: 200, 
-  padding: 10,
-  borderRadius: 5,
-  marginVertical: 10, 
-  alignItems: 'center'
-},
+  container: {
+    flex: 1,
+    //justifyContent: 'center',
+    //alignItems: 'center',
+    padding: 16, // Padding around the container
+    backgroundColor: '#A7C7E7',
+    
+  },
+
+  hearts: {
+    flexDirection: 'row',
+    justifyContent: 'right',
+    gap: 5,
+  },
+
+  score: {
+    flexDirection: 'row',
+    justifyContent: 'right',
+  },
+
+  scoreText:{
+    fontSize: 25,
+
+
+  },
+
+  questions:{
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderWidth: 1,
+    alignSelf: 'baseline',
+    alignContent: 'center',
+    borderRadius: 15,
+    height: 250,
+    width: 450,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+
+  questionArea:{
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignContent: 'center',
+    alignItems: 'center',
+    paddingTop: 50,
+  },
+
+  answerArea: {
+    //display: 'flex',
+    flexDirection: 'row',
+    alignContent: 'center',
+    justifyContent: 'space-between',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    gap: 75,
+    
+  },
+
+  answers: {
+    flexDirection: 'row',
+    borderColor: 'black',
+    borderWidth: 1,
+    alignContent: 'center',
+    borderRadius: 15,
+    height: 250,
+    width: 450,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+
+  },
 });
