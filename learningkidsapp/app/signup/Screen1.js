@@ -6,7 +6,8 @@ import { TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
-
+import { auth } from '../config/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 export default function ParentSignup() {
 
   /*loading fonts here
@@ -27,17 +28,26 @@ if (!fontsLoaded) {
     if (!email || !parentfirstname || !password || !parentlastname) {
       Alert.alert('Error', 'All fields are required!');
     } else {
-      // Here you would typically send the data to your backend
-      Alert.alert('Successful sign up');
-      // Reset form field
-      setEmail('');
-      setParentFirstName('');
-      setParentLastName('');
-      setPassword('');
-// Navigate to Screen2
-router.push('/signup/Screen2');
-    }
-  };
+      createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // User created successfully
+        const user = userCredential.user;
+        Alert.alert('Successful sign up', `Welcome ${parentfirstname}!`);
+        ;
+        
+        // Reset form fields
+        setEmail('');
+        setParentFirstName('');
+        setParentLastName('');
+        setPassword('');
+        // Navigate to Screen2
+        router.push('/signup/Screen2');
+      })
+      .catch((error) => {
+        Alert.alert('Error', error.message);
+      });
+  }
+};
 
   return (
     <View style={styles.container}>
