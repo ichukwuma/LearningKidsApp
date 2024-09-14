@@ -6,37 +6,57 @@ import { TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
+import { getDatabase, ref, push, set } from 'firebase/database';
+import { auth, database } from '../config/firebaseConfig';
 
-export default function ChildSignup() {
-
-  /*loading fonts here
-  let [fontsLoaded] = useFonts({
-    EBGaramond_600SemiBold,EBGaramond_800ExtraBold
-});
-if (!fontsLoaded) {
-    return null;
-  }*/
-
-  const [email, setEmail] = useState(''); /*Inputs for the child name and user*/
-  const [childfirstname, setchildFirstName] = useState('');
-  const [childlastname, setchildLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const router = useRouter(); // Initialize useRouter
-
-  const handlechildSignup = () => { 
-    if (!childfirstname || !username || !childlastname) {
-      Alert.alert('Error', 'All fields are required!');
-    } else {
-      // Here you would typically send the data to your backend
-      Alert.alert('Successful child sign up');
-      // Reset form field
-      setchildFirstName('');
-      setchildLastName('');
-      setUsername('');
-// Navigate to Screen2
-router.push('/signup/EmergencyContact');
-    }
-  };
+  export default function ChildSignup() {
+    const [childfirstname, setChildFirstName] = useState('');
+    const [childlastname, setChildLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const router = useRouter();
+  
+   
+  
+    const handleChildSignup = async () => {
+      if (!childfirstname || !childlastname || !username) {
+        Alert.alert('Error', 'All fields are required!');
+        return;
+      }
+  
+      const parentId = auth.currentUser?.uid; // Get parent’s unique ID
+  
+      if (!parentId) {
+        Alert.alert('Error', 'Parent not authenticated.');
+        return;
+      }
+  
+      try {
+        // Reference to the parent's children node in Realtime Database
+        const childrenRef = ref(database, `parents/${parentId}/children`);
+        
+        // Create a new child entry under this parent
+        const newChildRef = push(childrenRef);
+  
+        // Save child's data under the new reference
+        await set(newChildRef, {
+          firstName: childfirstname,
+          lastName: childlastname,
+          username: username,
+        });
+  
+        Alert.alert('Successful child sign up', `Child ${childfirstname} registered successfully!`);
+        
+        // Reset form fields
+        setChildFirstName('');
+        setChildLastName('');
+        setUsername('');
+        
+        // Navigate to next screen
+        router.push('/signup/EmergencyContact');
+      } catch (error) {
+        Alert.alert('Error', error.message);
+      }
+    };
 
   return (
     <View style={styles.container}>
@@ -51,7 +71,7 @@ router.push('/signup/EmergencyContact');
         style={styles.input}
         placeholder="Child First Name"
         value={childfirstname}
-        onChangeText={setchildFirstName}
+        onChangeText={setChildFirstName}
         keyboardType="childFirstName"
       />
 
@@ -59,7 +79,7 @@ router.push('/signup/EmergencyContact');
         style={styles.input}
         placeholder="Child Last Name"
         value={childlastname}
-        onChangeText={setchildLastName}
+        onChangeText={setChildLastName}
       />
 
       <TextInput
@@ -67,10 +87,9 @@ router.push('/signup/EmergencyContact');
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
-        secureTextEntry
       />
 
-<TouchableOpacity style={styles.button} onPress={handlechildSignup}>
+<TouchableOpacity style={styles.button} onPress={handleChildSignup}>
         <Text style={styles.buttonText}>Finish Child Sign Up</Text>
       </TouchableOpacity>
       

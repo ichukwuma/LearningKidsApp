@@ -8,15 +8,8 @@ import { Image } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { auth } from '../config/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-export default function ParentSignup() {
 
-  /*loading fonts here
-  let [fontsLoaded] = useFonts({
-    EBGaramond_600SemiBold,EBGaramond_800ExtraBold
-});
-if (!fontsLoaded) {
-    return null;
-  }*/
+export default function ParentSignup() {
 
   const [email, setEmail] = useState(''); /*Inputs for the emails, usernames and pw*/
   const [parentfirstname, setParentFirstName] = useState('');

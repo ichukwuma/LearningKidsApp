@@ -15,7 +15,7 @@ const EmergencyContacts = () => {
     name: '',
     address: '',
     phone: '',
-    relationship: 'Mother', // Default relationship
+    relationship: 'Relationship', // Default relationship
   });
   const [editIndex, setEditIndex] = useState(null); // Track the index of the contact being edited
 

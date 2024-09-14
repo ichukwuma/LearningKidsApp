@@ -39,6 +39,7 @@ export default function Button(clickButton) {
                 </Pressable>
             </Link>
 
+            {/*Linking to Sign Up*/}
             <Link href="/signup/Screen1" asChild>
                 <Pressable style={styles.button} onPressSignUp={onPressSignUp}>
                     <Text style={styles.text}>{SignUpBtn}</Text>
