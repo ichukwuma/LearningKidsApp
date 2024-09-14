@@ -1,12 +1,15 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet, TextInput, Button, Alert, SafeAreaView, TouchableOpacity} from 'react-native';
 import { Link } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { Image } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { ScrollView } from 'react-native';
 import Dropdown from './Dropdown'; // Import the custom dropdown component
+import { ref, push, set, remove } from 'firebase/database';
+import { database } from '../config/firebaseConfig';
+import { auth } from '../config/firebaseConfig';
 
 const EmergencyContacts = () => {
   const [contacts, setContacts] = useState([]);
@@ -15,45 +18,146 @@ const EmergencyContacts = () => {
     name: '',
     address: '',
     phone: '',
-    relationship: 'Relationship', // Default relationship
+    relationship: 'Relationship',
   });
-  const [editIndex, setEditIndex] = useState(null); // Track the index of the contact being edited
+  const [editIndex, setEditIndex] = useState(null); // Track index of the contact being edited
+  const [firebaseKey, setFirebaseKey] = useState(null); // Store Firebase key of the contact being edited
 
-  const handleInputChange = (name, value) => { //setting editted contacts 
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const parentId = auth.currentUser?.uid;
+      const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+
+      if (!parentId || !childId) {
+        Alert.alert('Error', 'Parent or Child ID missing.');
+        return;
+      }
+
+      const contactsRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts`);
+      contactsRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const loadedContacts = Object.keys(data).map(key => ({ ...data[key], key }));
+          setContacts(loadedContacts);
+        } else {
+          setContacts([]);
+        }
+      });
+    };
+
+    fetchContacts();
+  }, []);
+
+  const handleInputChange = (name, value) => {
     setNewContact((prevContact) => ({
       ...prevContact,
       [name]: value,
     }));
   };
 
-  const handleAddContact = () => {//adding new contacts
-    if (editIndex !== null) {
-      // Update existing contact
-      const updatedContacts = [...contacts];
-      updatedContacts[editIndex] = newContact;
-      setContacts(updatedContacts);
-      setEditIndex(null); // Reset edit mode
-    } else {
-      // Add new contact
-      setContacts((prevContacts) => [...prevContacts, newContact]);
+  const handleEditContact = (index) => {
+    const contactToEdit = contacts[index];
+    if (!contactToEdit) {
+      Alert.alert('Error', 'Contact not found.');
+      return;
     }
-    setNewContact({ name: '', address: '', phone: '', relationship: 'Mother' });
-    setShowForm(false);
-  };
-
-  const handleEditContact = (index) => {//editing
-    setNewContact(contacts[index]);
+    setNewContact({
+      name: contactToEdit.name,
+      address: contactToEdit.address,
+      phone: contactToEdit.phone,
+      relationship: contactToEdit.relationship,
+    });
     setEditIndex(index);
+    setFirebaseKey(contactToEdit.key); // Store the Firebase key for updating
     setShowForm(true);
   };
 
-  const handleDeleteContact = () => {//deleting
-    const updatedContacts = contacts.filter((_, i) => i !== editIndex);
-    setContacts(updatedContacts);
-    setEditIndex(null);
-    setShowForm(false);
-    setNewContact({ name: '', address: '', phone: '', relationship: 'Mother' }); // Reset form fields
+  const handleDeleteContact = () => {
+    if (editIndex === null || editIndex >= contacts.length) {
+      Alert.alert('Error', 'Invalid contact index.');
+      return;
+    }
+
+    const contactToDelete = contacts[editIndex];
+
+    if (!contactToDelete || !contactToDelete.key) {
+      Alert.alert('Error', 'Contact key is missing.');
+      return;
+    }
+
+    const parentId = auth.currentUser?.uid;
+    const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+
+    if (!parentId || !childId) {
+      Alert.alert('Error', 'Parent or Child ID missing.');
+      return;
+    }
+
+    const contactRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts/${contactToDelete.key}`);
+
+    remove(contactRef)
+      .then(() => {
+        const updatedContacts = contacts.filter((_, i) => i !== editIndex);
+        setContacts(updatedContacts);
+        setShowForm(false);
+        setEditIndex(null);
+        setFirebaseKey(null);
+        Alert.alert('Success', 'Emergency contact deleted successfully.');
+      })
+      .catch((error) => {
+        Alert.alert('Error', error.message);
+      });
   };
+
+  const handleAddOrUpdateContact = () => {
+    const parentId = auth.currentUser?.uid;
+    const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+
+    if (!parentId || !childId) {
+      Alert.alert('Error', 'Parent or Child ID missing.');
+      return;
+    }
+
+    if (!newContact.name || !newContact.address || !newContact.phone || !newContact.relationship) {
+      Alert.alert('Error', 'All contact fields are required.');
+      return;
+    }
+
+    const contactsRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts`);
+
+    if (editIndex !== null && firebaseKey) {
+      // Override existing contact using `set` (which replaces data at the reference)
+      const contactRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts/${firebaseKey}`);
+      set(contactRef, newContact)
+        .then(() => {
+          const updatedContacts = [...contacts];
+          updatedContacts[editIndex] = { ...newContact, key: firebaseKey }; // Update local state
+          setContacts(updatedContacts);
+          Alert.alert('Success', 'Emergency contact updated successfully.');
+          setNewContact({ name: '', address: '', phone: '', relationship: 'Mother' });
+          setShowForm(false);
+          setEditIndex(null); // Reset after editing
+          setFirebaseKey(null); // Clear Firebase key
+        })
+        .catch((error) => {
+          Alert.alert('Error', error.message);
+        });
+    } else {
+      // Add new contact
+      const newContactRef = push(contactsRef);
+      set(newContactRef, newContact)
+        .then(() => {
+          setContacts((prevContacts) => [...prevContacts, { ...newContact, key: newContactRef.key }]);
+          Alert.alert('Success', 'Emergency contact added successfully.');
+          setNewContact({ name: '', address: '', phone: '', relationship: 'Mother' });
+          setShowForm(false);
+        })
+        .catch((error) => {
+          Alert.alert('Error', error.message);
+        });
+    }
+  };
+
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -95,10 +199,10 @@ const EmergencyContacts = () => {
               ]}
             />
             <Button
-              title={editIndex !== null ? 'Update Contact' : 'Done'}
-              onPress={handleAddContact}
+              title={firebaseKey !== null ? 'Update Contact' : 'Done'}
+              onPress={handleAddOrUpdateContact}
             />
-            {editIndex !== null && (
+            {firebaseKey !== null && (
               <Button
                 title="Delete Contact"
                 color="red"
@@ -110,7 +214,7 @@ const EmergencyContacts = () => {
               color="gray"
               onPress={() => {
                 setShowForm(false);
-                setEditIndex(null);
+                setfirebaseKey(null);
                 setNewContact({ name: '', address: '', phone: '', relationship: 'Mother' });
               }}
             />

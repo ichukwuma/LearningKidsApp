@@ -20,6 +20,7 @@ export default function Button(clickButton) {
     const { onPressGameHub, gameHubScreenBtn = 'Game Hub' } = clickButton;
     const { onPressHome, homeScreenBtn = 'Home' } = clickButton;
     const { onPressSignUp, SignUpBtn = 'Sign Up' } = clickButton;
+    const { onPressLogin, loginScreenBtn = 'Login' } = clickButton;
 
   return (
 
@@ -43,6 +44,13 @@ export default function Button(clickButton) {
             <Link href="/signup/Screen1" asChild>
                 <Pressable style={styles.button} onPressSignUp={onPressSignUp}>
                     <Text style={styles.text}>{SignUpBtn}</Text>
+                </Pressable>
+            </Link>
+
+
+            <Link href="/Login/login" asChild>
+                <Pressable style={styles.button} onPressLogin={onPressLogin}>
+                    <Text style={styles.text}>{loginScreenBtn}</Text>
                 </Pressable>
             </Link>
 

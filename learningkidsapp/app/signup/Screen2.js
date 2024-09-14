@@ -44,7 +44,7 @@ import { auth, database } from '../config/firebaseConfig';
           username: username,
         });
   
-        Alert.alert('Successful child sign up', `Child ${childfirstname} registered successfully!`);
+        Alert.alert('Successful child sign up', `${childfirstname} registered successfully!`);
         
         // Reset form fields
         setChildFirstName('');
