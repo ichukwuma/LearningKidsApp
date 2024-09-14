@@ -10,7 +10,7 @@ import Dropdown from './Dropdown'; // Import the custom dropdown component
 import { ref, push, set, remove } from 'firebase/database';
 import { database } from '../config/firebaseConfig';
 import { auth } from '../config/firebaseConfig';
-
+/*Emergency Contacts*/
 const EmergencyContacts = () => {
   const [contacts, setContacts] = useState([]);
   const [showForm, setShowForm] = useState(false);
