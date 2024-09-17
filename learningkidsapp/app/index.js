@@ -19,6 +19,8 @@ export default function Button(clickButton) {
     {/*Buttons for screens*/}
     const { onPressGameHub, gameHubScreenBtn = 'Game Hub' } = clickButton;
     const { onPressHome, homeScreenBtn = 'Home' } = clickButton;
+    const { onPressLogin, loginScreenBtn = 'Login' } = clickButton;
+    const { onPressSignUp, SignUpBtn = 'Sign Up' } = clickButton;
 
   return (
 
@@ -35,6 +37,18 @@ export default function Button(clickButton) {
             <Link href="/home/home" asChild>
                 <Pressable style={styles.button} onPressHome={onPressHome}>
                     <Text style={styles.text}>{homeScreenBtn}</Text>
+                </Pressable>
+            </Link>
+
+            <Link href="/Login/login" asChild>
+                <Pressable style={styles.button} onPressLogin={onPressLogin}>
+                    <Text style={styles.text}>{loginScreenBtn}</Text>
+                </Pressable>
+            </Link>
+
+            <Link href="/signup/Screen1" asChild>
+                <Pressable style={styles.button} onPressSignUp={onPressSignUp}>
+                    <Text style={styles.text}>{SignUpBtn}</Text>
                 </Pressable>
             </Link>
 

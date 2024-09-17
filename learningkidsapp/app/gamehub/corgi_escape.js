@@ -1,13 +1,20 @@
-
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
 import React, { useState } from 'react';
-export default function Page() {
+import { Link } from 'expo-router';
+
+export default function Page(clickButton) {
+  const { onPressIndex, indexScreenBtn = 'Index.js' } = clickButton;
+
   return (
     <SafeAreaView style={styles.container}>
+      <Link href="/" asChild>
+        <Pressable style={styles.button} onPressIndex={onPressIndex}></Pressable>
+        </Link>
       <View style={styles.hearts}>
+        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-start'}}/>
         <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
         <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
+        
       </View>
       <View style={styles.score}>
         <Text style={styles.scoreText}>Score: 0</Text>
@@ -45,6 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'right',
     gap: 5,
+    alignItems: 'right',
   },
 
   score: {
@@ -54,8 +62,6 @@ const styles = StyleSheet.create({
 
   scoreText:{
     fontSize: 25,
-
-
   },
 
   questions:{
@@ -65,8 +71,8 @@ const styles = StyleSheet.create({
     alignSelf: 'baseline',
     alignContent: 'center',
     borderRadius: 15,
-    height: 250,
-    width: 450,
+    height: "90%",
+    width: "90%",
     justifyContent: 'center',
     paddingHorizontal: 20,
   },
@@ -77,6 +83,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     paddingTop: 50,
+    height: 250,
   },
 
   answerArea: {
@@ -86,8 +93,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50,
-    gap: 75,
+    paddingVertical: 20,
+    gap: 5,
     
   },
 
@@ -97,10 +104,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignContent: 'center',
     borderRadius: 15,
-    height: 250,
-    width: 450,
+    //height: 250,
+    //width: 450,
     justifyContent: 'center',
     paddingHorizontal: 20,
 
   },
+
+  button: {
+    width: 200, // Set a fixed width or use maxWidth
+    padding: 10,
+    backgroundColor: '#f7e7b4',
+    borderRadius: 5,
+    marginVertical: 10, 
+    alignItems: 'center'
+  },
+
+  text: {
+    color: '#000000',
+    fontSize: 16,
+    fontFamily: 'EBGaramond_800ExtraBold'
+},
+
+
 });
