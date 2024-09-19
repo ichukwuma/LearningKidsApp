@@ -1,7 +1,12 @@
 import React from 'react';
 import { Pressable, Text, View, StyleSheet} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { Link } from 'expo-router';
+import { GameEngine } from 'react-native-game-engine';
+//import entities from '../../entities';
+//i still can not get entities to work
+import Bird from "../../components/Bird"
 
 
 
@@ -21,14 +26,22 @@ export default function Button(clickButton) {
   return (
     <View style={styles.container}>
 
-            <Text>Treat Falls Game Screen</Text>
+    {/*Game engine takes in the systems -> physics engine and entities */}
+      <GameEngine
+      entities={entities()}
+        style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}>
 
-            {/*Linking back to index.js page*/}
-            <Link href="/" asChild>
-                <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
-                    <Text style={styles.text}>{indexScreenBtn}</Text>
-                </Pressable>
-            </Link>
+      </GameEngine>
+
+
+
+    {/*To hide the status bar set hidden= true */}
+    
+    <StatusBar style="auto" hidden={true} />
+
+            
+
+
 
     </View>
 
@@ -40,6 +53,7 @@ container: {
   justifyContent: 'center',
   alignItems: 'center',       
   backgroundColor: '#A7C7E7',
+  flex: 1,
 },
 indexButton:{
   backgroundColor: '#FAC898',
