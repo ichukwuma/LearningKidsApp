@@ -12,8 +12,8 @@ export const Questions = [
 {
     question: "What is (TITLE's) first name?",
     options: [
-        "Wrong",
         "Correct",
+        "Wrong",
         "Wrong",
     ],
     correctAnswer: "Correct",
@@ -31,8 +31,8 @@ export const Questions = [
     question: "What state do you live in?",
     options: [
         "Wrong",
-        "Correct",
         "Wrong",
+        "Correct",
     ],
     correctAnswer: "Correct",
 },
@@ -48,8 +48,8 @@ export const Questions = [
 {
     question: "What is your house number?",
     options: [
-        "Wrong",
         "Correct",
+        "Wrong",
         "Wrong",
     ],
     correctAnswer: "Correct",
@@ -58,8 +58,8 @@ export const Questions = [
     question: "Who can you call when you're lost?",
     options: [
         "Wrong",
-        "Correct",
         "Wrong",
+        "Correct",
     ],
     correctAnswer: "Correct",
 },

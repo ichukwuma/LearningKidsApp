@@ -1,6 +1,7 @@
 import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Modal } from 'react-native';
 import React, { useState } from 'react';
 import { Link } from 'expo-router';
+import { Questions } from '../config/questions';
 
 export default function Page() {
 
@@ -25,11 +26,28 @@ export default function Page() {
   };
 
 
+// random number generator
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min +1)) + min;
+}
+const randomNum = getRandomNumber(0,Questions.length);
+
+
+//Questions
+const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+const handleRight = () => {
+  if(currentQuestionIndex === Questions.length -1){
+    return;
+  }
+  setCurrentQuestionIndex(currentQuestionIndex + 1);
+};
 
 
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* test hint button works */}
         <Modal animationType='slide' transparent={true} visible={isModalVisible}>
            <View style={styles.modalWrapper}>
             <View style={styles.modalView}>
@@ -62,15 +80,32 @@ export default function Page() {
       </View>
 
       <View style={styles.questionArea}>
-        <TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>
+        <Text style={styles.questionText}>{Questions[currentQuestionIndex].question}</Text>
+        {/* {Questions.map((item) => (
+          <View>
+            <Text>{item.question}</Text>
+          </View>
+        ))} */}
+        
+        
+        {/*<TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>*/}
       </View>
 
       
 
       <View style={styles.answerArea}>
+      {Questions[currentQuestionIndex].options.map((option) => (
+          <View style={styles.answers}>
+            <Pressable onPress={handleRight}>
+              <Text>{option}</Text>
+            </Pressable>
+          </View>
+        ))}
+        
+        
+        {/* <TextInput style={styles.answers} placeholder='Answers'></TextInput>
         <TextInput style={styles.answers} placeholder='Answers'></TextInput>
-        <TextInput style={styles.answers} placeholder='Answers'></TextInput>
-        <TextInput style={styles.answers} placeholder='Answers'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers'></TextInput> */}
       </View>
 
       <View style= {styles.testArea}>
@@ -202,6 +237,9 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignItems: 'center',
     height: 250,
+    borderWidth: 1,
+    borderRadius: 15,
+    marginHorizontal: 10,
   },
 
   answerArea: {
@@ -212,6 +250,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 5,
     gap: 5,
+    marginTop: 10,
+    justifyContent: 'space-between',
     
   },
 
@@ -221,8 +261,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignContent: 'center',
     borderRadius: 15,
-    //height: 250,
-    //width: 450,
+    width: '25%',
     justifyContent: 'center',
     paddingHorizontal: 20,
 
@@ -242,6 +281,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'EBGaramond_800ExtraBold'
 },
+
+questionText:
+{
+  fontSize: 20,
+
+
+}
 
 
 });
