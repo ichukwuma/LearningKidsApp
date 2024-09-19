@@ -4,8 +4,6 @@ import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 
-
-
 export default function Button(clickButton) {
 
     {/*loading fonts here */}
