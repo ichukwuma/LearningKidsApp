@@ -14,7 +14,7 @@
     "@react-native-firebase/app": "^20.5.0",
     "@react-native-firebase/auth": "^20.5.0",
     "@urql/core": "^5.0.6",
-    "expo": "~51.0.28",
+    "expo": "^51.0.32",
     "expo-app-loading": "^1.1.2",
     "expo-cli": "^6.3.10",
     "expo-constants": "~16.0.2",
@@ -36,5 +36,9 @@
   "devDependencies": {
     "@babel/core": "^7.20.0"
   },
-  "private": true
+  "private": true,
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

@@ -2,35 +2,77 @@ import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text
 import React, { useState } from 'react';
 import { Link } from 'expo-router';
 
-export default function Page(clickButton) {
-  const { onPressIndex, indexScreenBtn = 'Index.js' } = clickButton;
+export default function Page() {
+
+  const increaseNum = 10;
+
+  const [score, setScore] = useState(0);
+  const incrementScore = () => {
+    setScore(score + increaseNum);
+  };
+
+  const [health, setHealth] = useState(3);
+  const decrementHealth = () => {
+    setHealth(prevHealth => Math.max(prevHealth - 1, 0));
+  };
+
+
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
+
       <Link href="/" asChild>
-        <Pressable style={styles.button} onPressIndex={onPressIndex}></Pressable>
-        </Link>
+        <Pressable style={styles.button}>
+            <Text>Back To Index</Text>
+        </Pressable>
+      </Link>
+
+
       <View style={styles.hearts}>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-start'}}/>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
-        
+        <Image source={require('../../assets/heartIcon.png')}/>
+        <Image source={require('../../assets/heartIcon.png')}/>
+        <Image source={require('../../assets/heartIcon.png')}/>
+      </View>
+
+      <View style = {styles.healthTest}>
+        <Text>(Testing Purposes) Health: {health}</Text>
       </View>
       <View style={styles.score}>
-        <Text style={styles.scoreText}>Score: 0</Text>
+        <Text style={styles.scoreText}>Score: {score}</Text>
       </View>
 
       <View style={styles.questionArea}>
         <TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>
       </View>
 
-      <View style={styles.answerArea}>
-        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
-        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
-        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
-      </View>
       
 
+      <View style={styles.answerArea}>
+        <TextInput style={styles.answers} placeholder='Answers'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers'></TextInput>
+        <TextInput style={styles.answers} placeholder='Answers'></TextInput>
+      </View>
+
+      <View style= {styles.testArea}>
+        <Pressable style={styles.button} onPress={incrementScore}>
+            <Text>Increment Score</Text>
+        </Pressable>
+
+        <Pressable style={styles.button} onPress={decrementHealth}>
+            <Text>Decrement Health</Text>
+        </Pressable>
+      </View>
+      
+    <View style = {styles.hintArea}>
+    <Image source={require('../../assets/games/hint2x.png')}/>
+    <Image source={require('../../assets/games/hint2x.png')}/>
+    <Image source={require('../../assets/games/hint2x.png')}/>
+
+
+    </View>
 
     </SafeAreaView>
 
@@ -39,6 +81,36 @@ export default function Page(clickButton) {
 }
 
 const styles = StyleSheet.create({
+  healthTest: {
+    alignSelf: 'flex-end',
+
+  },
+  
+  testArea: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+
+
+  },
+  
+  hintArea:
+  {
+    width: '100%',
+    height: '33%',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    position: 'absolute',
+    bottom: 0,
+    paddingHorizontal: 10,
+    marginBottom: 50,
+    alignItems: 'flex-end',
+
+  },
+
+
+
+  
   container: {
     flex: 1,
     //justifyContent: 'center',
@@ -50,9 +122,10 @@ const styles = StyleSheet.create({
 
   hearts: {
     flexDirection: 'row',
-    justifyContent: 'right',
     gap: 5,
     alignItems: 'right',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 10,
   },
 
   score: {
@@ -79,21 +152,18 @@ const styles = StyleSheet.create({
 
   questionArea:{
     justifyContent: 'center',
-    flexDirection: 'row',
     alignContent: 'center',
     alignItems: 'center',
-    paddingTop: 50,
     height: 250,
   },
 
   answerArea: {
-    //display: 'flex',
+    width: '100%',
     flexDirection: 'row',
     alignContent: 'center',
-    justifyContent: 'space-between',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 5,
     gap: 5,
     
   },
@@ -122,7 +192,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#000000',
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'EBGaramond_800ExtraBold'
 },
 
