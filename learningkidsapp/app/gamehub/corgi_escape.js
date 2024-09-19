@@ -1,4 +1,4 @@
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
+import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Modal } from 'react-native';
 import React, { useState } from 'react';
 import { Link } from 'expo-router';
 
@@ -13,9 +13,16 @@ export default function Page() {
 
   const [health, setHealth] = useState(3);
   const decrementHealth = () => {
-    setHealth(prevHealth => Math.max(prevHealth - 1, 0));
+    setHealth(health => Math.max(health - 1, 0));
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = () => {
+    setIsModalVisible(true);
+    setTimeout(() => {
+      setIsModalVisible(false);
+    }, 3000); 
+  };
 
 
 
@@ -23,6 +30,16 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styles.container}>
+        <Modal animationType='slide' transparent={true} visible={isModalVisible}>
+           <View style={styles.modalWrapper}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Hint 1 used.</Text>
+          </View>
+          </View>
+        </Modal>
+
+
+
 
       <Link href="/" asChild>
         <Pressable style={styles.button}>
@@ -67,7 +84,9 @@ export default function Page() {
       </View>
       
     <View style = {styles.hintArea}>
-    <Image source={require('../../assets/games/hint2x.png')}/>
+    <Pressable onPress={showModal}>
+      <Image source={require('../../assets/games/hint2x.png')}/>
+    </Pressable>
     <Image source={require('../../assets/games/hint2x.png')}/>
     <Image source={require('../../assets/games/hint2x.png')}/>
 
@@ -81,6 +100,34 @@ export default function Page() {
 }
 
 const styles = StyleSheet.create({
+
+  modalWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    width: '70%',
+    position: 'absolute',
+    bottom: 50,
+    padding: 10,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalText: {
+    fontSize: 14,
+  },
+
+  
   healthTest: {
     alignSelf: 'flex-end',
 
