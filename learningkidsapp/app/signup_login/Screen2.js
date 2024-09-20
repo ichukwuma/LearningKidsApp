@@ -8,20 +8,23 @@ import { Image } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { getDatabase, ref, push, set } from 'firebase/database';
+import { auth, database } from '../config/firebaseConfig';
 
 export default function ChildSignup() {
 
-  let [fontsLoaded] = useFonts({
+  /*let [fontsLoaded] = useFonts({
     EBGaramond_600SemiBold,EBGaramond_800ExtraBold
   });
   if (!fontsLoaded) {
     return null;
-  }
-  //const [email, setEmail] = useState(''); /*Inputs for the child name and user*/
-  //const [childfirstname, setchildFirstName] = useState('');
-  //const [childlastname, setchildLastName] = useState('');
-  //const [username, setUsername] = useState('');
-  //const router = useRouter(); // Initialize useRouter
+  }*/
+
+  const [email, setEmail] = useState(''); /*Inputs for the child name and user*/
+  const [childfirstname, setchildFirstName] = useState('');
+  const [childlastname, setchildLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const router = useRouter(); // Initialize useRouter
 
   {/*1st landing screen button */}
   const navigation = useNavigation();
@@ -29,19 +32,45 @@ export default function ChildSignup() {
       navigation.navigate('signup_login/Screen1'); 
     };
 
-  const handlechildSignup = () => { 
+  const handlechildSignup = async () => { 
     if (!childfirstname || !username || !childlastname) {
       Alert.alert('Error', 'All fields are required!');
-    } else {
-      // Here you would typically send the data to your backend
-      Alert.alert('Successful child sign up');
-      // Reset form field
-      setchildFirstName('');
-      setchildLastName('');
-      setUsername('');
-    // Navigate to Screen2
-    router.push('/signup/EmergencyContact');
-    }
+      return;
+    } 
+    const parentId = auth.currentUser?.uid; // Get parent’s unique ID
+  
+      if (!parentId) {
+        Alert.alert('Error', 'Parent not authenticated.');
+        return;
+      }
+  
+      try {
+        // Reference to the parent's children node in Realtime Database
+        const childrenRef = ref(database, `parents/${parentId}/children`);
+        
+        // Create a new child entry under this parent
+        const newChildRef = push(childrenRef);
+  
+        // Save child's data under the new reference
+        await set(newChildRef, {
+          firstName: childfirstname,
+          lastName: childlastname,
+          username: username,
+        });
+  
+        Alert.alert('Successful child sign up', `${childfirstname} registered successfully!`);
+        
+        // Reset form fields
+        setchildFirstName('');
+        setchildLastName('');
+        setUsername('');
+        
+        // Navigate to next screen
+        router.push('/signup_login/EmergencyContact');
+      } catch (error) {
+        Alert.alert('Error', error.message);
+      }
+
   };
 
   return (
@@ -63,23 +92,23 @@ export default function ChildSignup() {
       <TextInput
         style={styles.input}
         placeholder="Child First Name"
-        //value={childfirstname}
-        //onChangeText={setchildFirstName}
+        value={childfirstname}
+        onChangeText={setchildFirstName}
         keyboardType="childFirstName"
       />
 
       <TextInput
         style={styles.input}
         placeholder="Child Last Name"
-        //value={childlastname}
-        //onChangeText={setchildLastName}
+        value={childlastname}
+        onChangeText={setchildLastName}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Username"
-        //value={username}
-        //onChangeText={setUsername}
+        value={username}
+        onChangeText={setUsername}
         secureTextEntry
       />
 

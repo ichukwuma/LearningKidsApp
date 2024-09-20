@@ -4,11 +4,36 @@ import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../config/firebaseConfig';
+
+
 
 export default function LoginForm() {
   const [click, setClick] = useState(false);
-  const {username, setUsername}= useState("");
-  const {password, setPassword}= useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+  
+  const handleParentLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Email and password are required!');
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          Alert.alert('Login successful', `Welcome back!`);
+          setEmail('');
+          setPassword('');
+          router.push('/home/home');
+        })
+        .catch((error) => {
+          Alert.alert('Login failed', 'Incorrect Email or Password');
+        });
+    }
+  };
+
 
   {/*loading fonts here */}
   let [fontsLoaded] = useFonts({
@@ -37,7 +62,7 @@ export default function LoginForm() {
 
       {/*username input*/}
       <View style={styles.inputView}>
-        <TextInput  style={styles.input} placeholder='USERNAME' onChangeText={setUsername} 
+        <TextInput  style={styles.input} placeholder='USERNAME' onChangeText={setEmail} 
           autoCorrect={false} autoCapitalize='none'/>
       </View>
 

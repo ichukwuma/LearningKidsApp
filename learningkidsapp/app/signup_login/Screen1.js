@@ -8,20 +8,23 @@ import { Image } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { auth } from '../config/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
 
 export default function ParentSignup() {
 
-  let [fontsLoaded] = useFonts({
+  /*let [fontsLoaded] = useFonts({
     EBGaramond_600SemiBold,EBGaramond_800ExtraBold
   });
   if (!fontsLoaded) {
     return null;
-  }
-  //const [email, setEmail] = useState(''); /*Inputs for the emails, usernames and pw*/
-  //const [parentfirstname, setParentFirstName] = useState('');
-  //const [parentlastname, setParentLastName] = useState('');
-  //const [password, setPassword] = useState('');
-  //const router = useRouter(); // Initialize useRouter
+  }*/
+  const [email, setEmail] = useState(''); /*Inputs for the emails, usernames and pw*/
+  const [parentfirstname, setParentFirstName] = useState('');
+  const [parentlastname, setParentLastName] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter(); // Initialize useRouter
 
   {/*1st landing screen button */}
   const navigation = useNavigation();
@@ -33,15 +36,24 @@ export default function ParentSignup() {
     if (!email || !parentfirstname || !password || !parentlastname) {
       Alert.alert('Error', 'All fields are required!');
     } else {
-      // Here you would typically send the data to your backend
-      Alert.alert('Successful sign up');
-      // Reset form field
-      setEmail('');
-      setParentFirstName('');
-      setParentLastName('');
-      setPassword('');
-    // Navigate to Screen2
-    router.push('/signup/Screen2');
+      createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // User created successfully
+        const user = userCredential.user;
+        Alert.alert('Successful sign up', `Welcome ${parentfirstname}!`);
+        ;
+        
+        // Reset form fields
+        setEmail('');
+        setParentFirstName('');
+        setParentLastName('');
+        setPassword('');
+        // Navigate to Screen2
+        router.push('/signup_login/Screen1.5');
+      })
+      .catch((error) => {
+        Alert.alert('Error', error.message);
+      });
     }
   };
 
@@ -68,23 +80,23 @@ export default function ParentSignup() {
       <TextInput
         style={styles.input}
         placeholder="Parent First Name"
-        //value={parentfirstname}
-        //onChangeText={setParentFirstName}
+        value={parentfirstname}
+        onChangeText={setParentFirstName}
         keyboardType="ParentFirstName"
       />
 
       <TextInput
         style={styles.input}
         placeholder="Parent Last Name"
-        //value={parentlastname}
-        //onChangeText={setParentLastName}
+        value={parentlastname}
+        onChangeText={setParentLastName}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Email"
-        //value={email}
-        //onChangeText={setEmail}
+        value={email}
+        onChangeText={setEmail}
         keyboardType="email-address"
       />
 
@@ -92,8 +104,8 @@ export default function ParentSignup() {
       <TextInput
         style={styles.input}
         placeholder="Password"
-        //value={password}
-        //onChangeText={setPassword}
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry
       />
 
