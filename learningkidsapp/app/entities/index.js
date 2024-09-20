@@ -10,11 +10,11 @@ export default restart => {
     let world = engine.world
 
     //this is the gravity of our game world idk but i think y = y axis 
-    world.gravity.y = 0.4; 
-
+    //world.gravity.x = 0.4; 
+    engine.world.gravity = { x: 0, y: 0.4 };
     return{
         physics: {engine, world},
-        Bird: Bird(world, 'green', {x: 50, y:200}, {height: 40, width: 40})
+        Bird: Bird(world, 'green', {x: 200, y:740}, {height: 150, width: 150})
 
     }
 }
