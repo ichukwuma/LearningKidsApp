@@ -19,7 +19,6 @@ export default function Button(clickButton) {
     const { onPressCorgiEscapeStart, corgiEscapeStartBtn = 'Start' } = clickButton;
     const { onPressTreatFallsTutorial, treatFallsTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressTreatFallsStart, treatFallsStartBtn = 'Start' } = clickButton;
-    const { onPressIndex, indexScreenBtn = 'Index.Js' } = clickButton;
 
     
 
@@ -71,13 +70,6 @@ export default function Button(clickButton) {
             </Link>
         </View>
 
-            {/*Linking back to index.js page*/}
-            <Link href="/" asChild>
-                <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
-                    <Text style={styles.text}>{indexScreenBtn}</Text>
-                </Pressable>
-            </Link>
-
     </View>
 
   );
@@ -88,9 +80,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',       
         backgroundColor: '#A7C7E7',
+        ...StyleSheet.absoluteFillObject
     },
     background: {
-        ...StyleSheet.absoluteFillObject, // Fill the entire container with this gradient color
+        ...StyleSheet.absoluteFillObject,
         width: '100%',
         height: '100%',
     },
