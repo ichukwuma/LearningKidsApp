@@ -84,7 +84,7 @@ export default function ChildSignup() {
       <Text style={styles.title}>Child Sign Up</Text>
       
       <Image
-        source={require('../../assets/scale5doggo.png')} 
+        source={require('../../assets/DogHouse.png')} 
         style={styles.image}
       />
 
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',       
     backgroundColor: '#A7C7E7',
+    ...StyleSheet.absoluteFillObject
   },
   title: {
     fontSize: 35,

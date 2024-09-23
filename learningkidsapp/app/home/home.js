@@ -17,7 +17,6 @@ export default function Button(clickButton) {
 
 
     {/*Buttons for screens*/}
-    const { onPressIndex, indexScreenBtn = 'Index.Js' } = clickButton;
     const { onPressSettings, settingsScreenBtn = 'Settings' } = clickButton;
     const { onPressProfile, profileScreenBtn = 'Profile' } = clickButton;
     const { onPressLeaderboard, leaderboardScreenBtn = 'Leaderboard' } = clickButton;
@@ -65,12 +64,7 @@ export default function Button(clickButton) {
                     <Text style={styles.text}>{gameHubScreenBtn}</Text>
                 </Pressable>
             </Link>
-            {/*Linking back to index.js page*/}
-            <Link href="/" asChild>
-                <Pressable style={styles.indexButton} onPressIndex={onPressIndex}>
-                    <Text style={styles.text}>{indexScreenBtn}</Text>
-                </Pressable>
-            </Link>
+           
 
             {/*Linking back to settings.js page*/}
             <Link href="/home/settings" asChild>
@@ -106,9 +100,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',       
         backgroundColor: '#A7C7E7',
         flex:1,
+        ...StyleSheet.absoluteFillObject,
     },
     background: {
-        ...StyleSheet.absoluteFillObject, // Fill the entire container with this gradient color
+        ...StyleSheet.absoluteFillObject,
         width: '100%',
         height: '100%',
     },
@@ -171,8 +166,8 @@ const styles = StyleSheet.create({
     },
 
     dogHouseImage: {
-      width: 300, 
-      height: 300,
+      width: 200, 
+      height: 200,
   },
 
     doggoImage: {

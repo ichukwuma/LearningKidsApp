@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',       
     backgroundColor: '#A7C7E7',
+    ...StyleSheet.absoluteFillObject
   },
   space:{
     height: 50,

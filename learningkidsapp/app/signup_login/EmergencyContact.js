@@ -11,6 +11,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { ref, push, set, remove } from 'firebase/database';
 import { database } from '../config/firebaseConfig';
 import { auth } from '../config/firebaseConfig';
+import { useNavigation } from '@react-navigation/native';
 
 
 const EmergencyContacts = () => {
@@ -22,6 +23,12 @@ const EmergencyContacts = () => {
   if (!fontsLoaded) {
     return null;
   }*/
+
+    {/*1st landing screen button */}
+    const navigation = useNavigation();
+    const nextButton = () => {
+    navigation.navigate('signup_login/signup_complete'); 
+    };
 
     const [contacts, setContacts] = useState([]);
     const [showForm, setShowForm] = useState(false);
@@ -253,7 +260,11 @@ const EmergencyContacts = () => {
           </View>
         ) : (
           <>
-            <Button title="Add Contact" onPress={() => setShowForm(true)} />
+            {/* Add Contact Button */}
+            <Pressable style={styles.addButton} onPress={() => setShowForm(true)}>
+              <Text style={styles.addButtonText}>Add Contact</Text>
+            </Pressable>
+
             
             {/* Contacts Display */}
             <View style={styles.contactsContainer}>
@@ -269,6 +280,13 @@ const EmergencyContacts = () => {
             </View>
           </>
         )}
+
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.button} onPress={nextButton}>
+            <Text style={styles.text}>Submit</Text>
+          </Pressable>
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -280,6 +298,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#A7C7E7',
+    ...StyleSheet.absoluteFillObject
   },
   container: {
     padding: 20,
@@ -325,6 +344,38 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
   },
+  button: {
+    width: 150,
+    padding: 10,
+    backgroundColor: '#f7e7b4',
+    borderRadius: 5,
+    marginVertical: 10, 
+    alignItems: 'center',
+  },
+  text: {
+    color: '#000000',
+    fontSize: 16,
+    fontFamily: 'EBGaramond_800ExtraBold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center', 
+    marginVertical: 20, 
+  },
+  addButton: {
+    backgroundColor: 'black', 
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  
+  addButtonText: {
+    color: 'white', 
+    fontSize: 16,
+    fontFamily: 'EBGaramond_800ExtraBold',
+  },
+  
 });
 
 export default EmergencyContacts;

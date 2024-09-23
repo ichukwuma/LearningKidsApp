@@ -71,6 +71,7 @@ export default function Button(clickButton) {
     justifyContent: 'center',
     alignItems: 'center',       
     backgroundColor: '#A7C7E7',
+    ...StyleSheet.absoluteFillObject
   },
   background: {
     ...StyleSheet.absoluteFillObject,
