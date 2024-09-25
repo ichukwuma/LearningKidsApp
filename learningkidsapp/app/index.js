@@ -25,32 +25,33 @@ export default function Button(clickButton) {
   return (
 
     <View style={styles.container}>
-            {/*Linking back to index.js page*/}
-            <Link href="/gamehub/gamehub_mainscreen" asChild>
-                <Pressable style={styles.button} onPressGameHub={onPressGameHub}>
-                    <Text style={styles.text}>{gameHubScreenBtn}</Text>
-                </Pressable>
-            </Link>
+      {/*Linking back to index.js page*/}
+      <Link href="/gamehub/gamehub_mainscreen" asChild>
+          <Pressable style={styles.button} onPressGameHub={onPressGameHub}>
+              <Text style={styles.text}>{gameHubScreenBtn}</Text>
+          </Pressable>
+      </Link>
 
 
-            {/*Linking back to home screen*/}
-            <Link href="/home/home" asChild>
-                <Pressable style={styles.button} onPressHome={onPressHome}>
-                    <Text style={styles.text}>{homeScreenBtn}</Text>
-                </Pressable>
-            </Link>
+      {/*Linking back to home screen*/}
+      <Link href="/home/home" asChild>
+          <Pressable style={styles.button} onPressHome={onPressHome}>
+              <Text style={styles.text}>{homeScreenBtn}</Text>
+          </Pressable>
+      </Link>
 
-            <Link href="/Login/login" asChild>
-                <Pressable style={styles.button} onPressLogin={onPressLogin}>
-                    <Text style={styles.text}>{loginScreenBtn}</Text>
-                </Pressable>
-            </Link>
+      <Link href="/Login/login" asChild>
+          <Pressable style={styles.button} onPressLogin={onPressLogin}>
+              <Text style={styles.text}>{loginScreenBtn}</Text>
+          </Pressable>
+      </Link>
 
-            <Link href="/signup/Screen1" asChild>
-                <Pressable style={styles.button} onPressSignUp={onPressSignUp}>
-                    <Text style={styles.text}>{SignUpBtn}</Text>
-                </Pressable>
-            </Link>
+      <Link href="/signup/Screen1" asChild>
+        <Pressable style={styles.button} onPressSignUp={onPressSignUp}>
+            <Text style={styles.text}>{SignUpBtn}</Text>
+        </Pressable>
+      </Link>
+
 
     </View>
 
