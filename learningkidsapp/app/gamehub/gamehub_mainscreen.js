@@ -2,6 +2,7 @@ import React from 'react';
 import { Pressable, Text, View, StyleSheet, Image} from 'react-native';
 import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import { Link } from 'expo-router';
 
 export default function Button(clickButton) {
@@ -20,12 +21,22 @@ export default function Button(clickButton) {
     const { onPressTreatFallsTutorial, treatFallsTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressTreatFallsStart, treatFallsStartBtn = 'Start' } = clickButton;
 
+    //button to go back to index.js aka the first landing screen
+    const navigation = useNavigation();
+    const backButton = () => {
+        navigation.navigate('home/home');
+    };
+
     
 
   return (
     <View style={styles.container}>
         <LinearGradient colors={['#6495ED', '#B0C4DE','#E0FFFF','#6495ED']} style={styles.background}/>
 
+        {/*back button*/}
+        <Pressable style={styles.back_arrow_img} onPress={backButton}>
+          <Image source={require('../../assets/back_arrow.png')} style={styles.back_arrow_img} />
+        </Pressable>
 
         <View  style={styles.coinAndGameHubTextContainer}>
             {/* game hub header text */}
@@ -150,11 +161,19 @@ const styles = StyleSheet.create({
         fontFamily: 'EBGaramond_600SemiBold'
     },
     coinAndGameHubTextContainer: {
+        top: 35,
        flexDirection: 'row', 
        alignItems: 'center', 
     },
     coinContainer: {
         alignItems: 'center', // Center align the image and title within the container
     },
+    back_arrow_img: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        width: 75,
+        height: 75,
+      },
 
   });

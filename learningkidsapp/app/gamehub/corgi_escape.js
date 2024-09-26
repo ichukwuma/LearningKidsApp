@@ -1,106 +1,51 @@
+import React from 'react';
+import { Pressable, Text, View, StyleSheet,Image } from 'react-native';
+import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import { Alert, Button, Image, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from 'react-native';
-import React, { useState } from 'react';
-export default function Page() {
+export default function corgi_escape() {
+
+  {/*loading fonts here */}
+  let [fontsLoaded] = useFonts({
+    EBGaramond_600SemiBold,EBGaramond_800ExtraBold
+  });
+  if (!fontsLoaded) {
+    return null;
+  }
+
+
+  //frontend
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.hearts}>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
-        <Image source={require('../../assets/heartIcon.png')}style= {{alignItems: 'flex-end'}}/>
-      </View>
-      <View style={styles.score}>
-        <Text style={styles.scoreText}>Score: 0</Text>
-      </View>
+   <View style={styles.container}>
+    <LinearGradient colors={['#6495ED', '#B0C4DE','#6495ED']} style={styles.background}/>
 
-      <View style={styles.questionArea}>
-        <TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>
-      </View>
-
-      <View style={styles.answerArea}>
-        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
-        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
-        <TextInput style={styles.answers} placeholder='Answers will go here'></TextInput>
-      </View>
-      
-
-
-    </SafeAreaView>
-
-
+    <Text style={styles.title}>Welcome, !</Text>
+    
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    padding: 16, // Padding around the container
-    backgroundColor: '#A7C7E7',
-    
-  },
-
-  hearts: {
-    flexDirection: 'row',
-    justifyContent: 'right',
-    gap: 5,
-  },
-
-  score: {
-    flexDirection: 'row',
-    justifyContent: 'right',
-  },
-
-  scoreText:{
-    fontSize: 25,
-
-
-  },
-
-  questions:{
-    flexDirection: 'row',
-    borderColor: 'black',
-    borderWidth: 1,
-    alignSelf: 'baseline',
-    alignContent: 'center',
-    borderRadius: 15,
-    height: 250,
-    width: 450,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
-
-  questionArea:{
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignContent: 'center',
-    alignItems: 'center',
-    paddingTop: 50,
-  },
-
-  answerArea: {
-    //display: 'flex',
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'space-between',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 50,
-    gap: 75,
-    
-  },
-
-  answers: {
-    flexDirection: 'row',
-    borderColor: 'black',
-    borderWidth: 1,
-    alignContent: 'center',
-    borderRadius: 15,
-    height: 250,
-    width: 450,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-
-  },
+container: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',       
+  ...StyleSheet.absoluteFillObject
+},
+background: {
+  ...StyleSheet.absoluteFillObject,
+  width: '100%',
+  height: '100%',
+},
+text: {
+  color: '#000000',
+  fontSize: 16,
+  fontFamily: 'EBGaramond_800ExtraBold',
+},
+title: {
+  fontSize: 30,
+  textAlign: 'center',
+  marginBottom: 20,
+  fontFamily: 'EBGaramond_800ExtraBold',
+},
 });
