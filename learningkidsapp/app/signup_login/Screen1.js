@@ -1,73 +1,61 @@
-import React from 'react';
-import { Pressable, Text, View, StyleSheet} from 'react-native';
-import { Link } from 'expo-router';
-import { useState } from 'react';
-import { TextInput, Button, Alert, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
-import { Image } from 'react-native';
-import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
+import React, { useState } from 'react';
+import { Pressable, Text, View, StyleSheet, TextInput, Alert, TouchableOpacity, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { auth } from '../config/firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-
 export default function ParentSignup() {
-
-  /*let [fontsLoaded] = useFonts({
-    EBGaramond_600SemiBold,EBGaramond_800ExtraBold
-  });
-  if (!fontsLoaded) {
-    return null;
-  }*/
-  const [email, setEmail] = useState(''); /*Inputs for the emails, usernames and pw*/
+  const [email, setEmail] = useState('');
   const [parentfirstname, setParentFirstName] = useState('');
   const [parentlastname, setParentLastName] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter(); // Initialize useRouter
-
-  {/*1st landing screen button */}
+  const router = useRouter();
   const navigation = useNavigation();
-    const backButton = () => {
-      navigation.navigate('signup_login/landing_screen_2'); 
-    };
+  const backButton = () => {
+    navigation.navigate('signup_login/landing_screen_2');
+  };
 
-  const handleParentSignup = () => { /*Pressing sign up button*/
+  const handleParentSignup = async () => {
     if (!email || !parentfirstname || !password || !parentlastname) {
       Alert.alert('Error', 'All fields are required!');
-    } else {
-      createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // User created successfully
-        const user = userCredential.user;
-        Alert.alert('Successful sign up', `Welcome ${parentfirstname}!`);
-        ;
-        
-        // Reset form fields
-        setEmail('');
-        setParentFirstName('');
-        setParentLastName('');
-        setPassword('');
-        // Navigate to Screen2
-        router.push('/signup_login/Screen1.5');
-      })
-      .catch((error) => {
-        Alert.alert('Error', error.message);
+      return;
+    }
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // Show success alert
+      Alert.alert('Successful sign up', `Welcome ${parentfirstname}!`);
+
+      // Reset the form fields everytime submit button is hit
+      setEmail('');
+      setParentFirstName('');
+      setParentLastName('');
+      setPassword('');
+
+      // Navigate to Screen1.5 and pass the first name of the parent to show on screen
+      router.push({
+        pathname: '/signup_login/Screen1.5',
+        //will be useful later to allow database info to show up on screens
+        params: { parent_first_name: parentfirstname, parent_last_name: {parentlastname} }
+
       });
+    } catch (error) {
+      Alert.alert('Error', error.message);
     }
   };
 
   return (
     <View style={styles.container}>
-      <LinearGradient colors={['#6495ED', '#B0C4DE','#6495ED']} style={styles.background}/>
-      {/*back button*/}
+      <LinearGradient colors={['#6495ED', '#B0C4DE','#6495ED']} style={styles.background} />
+      
       <Pressable style={styles.back_arrow_img} onPress={backButton}>
-          <Image source={require('../../assets/back_arrow.png')} style={styles.back_arrow_img} />
+        <Image source={require('../../assets/back_arrow.png')} style={styles.back_arrow_img} />
       </Pressable>
 
-      <View style={styles.space}>
-          
-      </View>
+      <View style={styles.space} />
 
       <Text style={styles.title}>Parent Sign Up</Text>
       
@@ -76,44 +64,41 @@ export default function ParentSignup() {
         style={styles.image}
       />
 
-      <View style={styles.inputView} asChild>
-      <TextInput
-        style={styles.input}
-        placeholder="Parent First Name"
-        value={parentfirstname}
-        onChangeText={setParentFirstName}
-        keyboardType="ParentFirstName"
-      />
+      <View style={styles.inputView}>
+        <TextInput
+          style={styles.input}
+          placeholder="Parent First Name"
+          value={parentfirstname}
+          onChangeText={setParentFirstName}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Parent Last Name"
-        value={parentlastname}
-        onChangeText={setParentLastName}
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Parent Last Name"
+          value={parentlastname}
+          onChangeText={setParentLastName}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
 
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleParentSignup}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleParentSignup}>
+          <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
       </View>
-      
     </View>
   );
 }
@@ -126,7 +111,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#A7C7E7',
     ...StyleSheet.absoluteFillObject
   },
-  space:{
+  space: {
     height: 50,
   },
   title: {
@@ -142,9 +127,6 @@ const styles = StyleSheet.create({
     width: 75,
     height: 75,
   },
-  TextInput: {
-  fontFamily: 'EBGaramond_800ExtraBold',
-  },
   image: {
     width: 200,  
     height: 200,
@@ -153,9 +135,9 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 200,
-    height : 40,
-    paddingHorizontal : 8,
-    borderWidth : 2,
+    height: 40,
+    paddingHorizontal: 8,
+    borderWidth: 2,
     borderRadius: 10,
     alignItems: 'center',
     alignContent: 'center',
@@ -179,13 +161,13 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  inputView : {
-    gap : 15,
-    width : "100%",
-    paddingHorizontal : 40,
+  inputView: {
+    gap: 15,
+    width: "100%",
+    paddingHorizontal: 40,
     paddingTop: 5,
     paddingBottom: 0,
-    marginBottom  :5,
+    marginBottom: 5,
     alignItems: 'center',
   },
 });
