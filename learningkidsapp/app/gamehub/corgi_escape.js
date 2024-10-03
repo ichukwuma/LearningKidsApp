@@ -48,6 +48,14 @@ export default function Page() {
     setScore(score + increaseNum);
   };
 //testing health
+
+  const [imageCount, setImageCount] = useState(3);
+  const imageSources = [
+    require('../../assets/heartIcon.png'),
+    require('../../assets/heartIcon.png'),
+    require('../../assets/heartIcon.png'),
+  ];
+
   const [health, setHealth] = useState(3);
   const decrementHealth = () => {
     setHealth(health => Math.max(health - 1, 0));
@@ -74,15 +82,43 @@ const randomNum = getRandomNumber(0,Questions.length);
 
 //Questions
 const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+const [selectedOption, setSelectedOption] = useState(null);
+const [isCorrect, setIsCorrect] = useState(null);
 
-const handleRight = () => {
-  if(currentQuestionIndex === Questions.length -1){
-    return;
+//console.log({isCorrect});
+//handle pressed option
+const handleOptionPress = (pressedOption) => {
+  setSelectedOption(pressedOption);
+  // test
+  //Alert.alert(pressedOption);
+
+  const isAnswerCorrect = Questions[currentQuestionIndex].correctAnswer === pressedOption;
+  setIsCorrect(isAnswerCorrect)
+
+  if(isAnswerCorrect){
+    increaseXP();
+    incrementScore();
   }
-  setCurrentQuestionIndex(currentQuestionIndex + 1);
 };
 
 
+
+
+
+//next question
+const handleNext = () => {
+  if(currentQuestionIndex === 6){
+    return;
+  }
+  else{
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setSelectedOption(null);
+  }
+
+  
+};
+
+//Questions out of 7
 const [questionNumber, setQuestionNumber ]= useState(1);
 const incrementQuestionNumber = () => {
   if(questionNumber < 7)
@@ -91,6 +127,13 @@ const incrementQuestionNumber = () => {
   }
   
 }
+//xp
+const xpIncreaseAmount = 5
+const [currentXP, setCurrentXP] = useState(0);
+const increaseXP = () => {
+  setCurrentXP(currentXP + xpIncreaseAmount);
+};
+
 
 
 
@@ -118,20 +161,24 @@ const incrementQuestionNumber = () => {
               <Text>Back To Index</Text>
           </Pressable>
         </Link>
-
-
+        <View>
+          <Text style={styles.QuestionOrder}>{questionNumber} OF 7</Text>
+        </View>
         <View style={styles.hearts}>
-          <Image source={require('../../assets/heartIcon.png')}/>
-          <Image source={require('../../assets/heartIcon.png')}/>
-          <Image source={require('../../assets/heartIcon.png')}/>
+        {imageSources.slice(0, imageCount).map((source, index) => (
+        <Image 
+        key={index} 
+        source={source}
+        />))}
+
         </View>
 
         {/* <View style = {styles.healthTest}>
           <Text>(Testing Purposes) Health: {health}</Text>
         </View> */}
         <View style={styles.score}>
-          <Text style={styles.scoreText}>XP: </Text>
-          <Text style={styles.scoreText}>{questionNumber} OF 7</Text>
+          <Text style={styles.scoreText}>XP: {currentXP}</Text>
+          
           <Text style={styles.scoreText}>Score: {score}</Text>
         </View>
 
@@ -151,13 +198,23 @@ const incrementQuestionNumber = () => {
 
         <View style={styles.answerArea}>
         {Questions[currentQuestionIndex].options.map((option) => (
-          <Pressable onPress={() => {handleRight(); incrementQuestionNumber();}}>
-            <View style={styles.answers}>
+          <Pressable style= {[styles.answers, { backgroundColor: selectedOption === option ? (isCorrect ? 'rgb(126, 242, 94)' : 'red') : 'rgba(211, 211, 211, 0.3)' }]} //{({pressed })=> [styles.answers, pressed ? styles.pressedAnswer : styles.answers]}
+           onPress={() => handleOptionPress(option)}
+           //one answer at a time
+           disabled={selectedOption}>
+            <View>
                 <Text style={styles.answerText}>{option}</Text>
             </View>
           </Pressable>
           ))}
         </View>
+        <View style = {styles.nextButtonArea}>
+          <Pressable style = {({ pressed }) => [styles.nextButton, pressed ? styles.pressedNextButton : styles.nextButton]}
+           onPress={() => {handleNext(); incrementQuestionNumber();}}>
+            <Text>NEXT</Text>
+          </Pressable>
+        </View>
+
 
         {/* <View style= {styles.testArea}>
           <Pressable style={styles.button} onPress={incrementScore}>
@@ -299,21 +356,17 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 2 }, 
     textShadowRadius: 1, // Blur radius for the shadow
   },
-
-
-  // questions:{
-  //   flexDirection: 'row',
-  //   borderColor: 'black',
-  //   borderWidth: 1,
-  //   alignSelf: 'baseline',
-  //   alignContent: 'center',
-  //   borderRadius: 15,
-  //   height: "90%",
-  //   width: "90%",
-  //   justifyContent: 'center',
-  //   paddingHorizontal: 20,
-  // },
-  
+  QuestionOrder:{
+    fontSize: 25,
+    fontFamily: 'EBGaramond_800ExtraBold',
+    color: 'white',
+    textShadowColor: 'black', // Outline color
+    textShadowOffset: { width: 2, height: 2 }, 
+    textShadowRadius: 1, // Blur radius for the shadow
+    position: 'absolute',
+    top: 10,
+    left: '41.5%',
+  },
 
   questionArea:{
     backgroundColor: 'rgba(211, 211, 211, 0.3)',
@@ -341,17 +394,6 @@ const styles = StyleSheet.create({
   
   },
 
-  // answers: {
-  //   flexDirection: 'row',
-  //   borderColor: 'black',
-  //   borderWidth: 1,
-  //   alignContent: 'center',
-  //   borderRadius: 15,
-  //   width: '25%',
-  //   justifyContent: 'center',
-  //   paddingHorizontal: 20,
-
-  // },
   answers: {
     //backgroundColor: '#f5e8c7',
     backgroundColor: 'rgba(211, 211, 211, 0.3)',
@@ -367,6 +409,10 @@ const styles = StyleSheet.create({
     
     fontFamily: 'EBGaramond_800ExtraBold',
    
+  },
+  pressedAnswer: {
+    backgroundColor: 'rgba(211, 211, 211, 0.7)',
+
   },
 
   button: {
@@ -418,6 +464,29 @@ answerText: {
   alignItems: 'center',
   borderRadius: 15,
 },
+
+nextButtonArea: {
+  justifyContent: 'center',
+  alignContent: 'center',
+  alignItems: 'center',
+
+
+},
+
+nextButton: {
+  padding: 10,
+  backgroundColor: '#f7e7b4',
+  borderRadius: 5,
+  alignItems: 'center',
+  minWidth: '75%',
+
+
+},
+pressedNextButton: {
+  backgroundColor: '#d9ca9c',
+
+},
+
 
 
 });

@@ -63,7 +63,15 @@ export const Questions = [
     ],
     correctAnswer: "Correct",
 },
-
+{
+    question: "What are the last 4 numbers of your phone number?",
+    options: [
+        "Wrong",
+        "Wrong",
+        "Correct",
+    ],
+    correctAnswer: "Correct",
+},
 
 
 
