@@ -48,7 +48,7 @@ export default function Page() {
     setScore(score + increaseNum);
   };
 //testing health
-
+//hearts
   const [imageCount, setImageCount] = useState(3);
   const imageSources = [
     require('../../assets/heartIcon.png'),
@@ -71,6 +71,14 @@ export default function Page() {
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
+
+
+//retry modal
+const [isRetryModalVisible, setIsRetryModalVisible] = useState(false);
+const showRetryModal = () => {
+  setIsRetryModalVisible(true);
+}
+
 
 
 // random number generator
@@ -98,6 +106,11 @@ const handleOptionPress = (pressedOption) => {
   if(isAnswerCorrect){
     increaseXP();
     incrementScore();
+  }
+  else{
+    setImageCount(imageCount-1);
+
+
   }
 };
 
@@ -153,6 +166,19 @@ const increaseXP = () => {
             </View>
           </Modal>
 
+        {/*Retry Modal*/}
+          <Modal>
+            <View stule={styles.modalWrapper}>
+              <View style={styles.modalView}>
+                {/* content goes here */}
+              </View>
+          </View>
+
+
+
+
+
+          </Modal>
 
 
 
@@ -165,11 +191,16 @@ const increaseXP = () => {
           <Text style={styles.QuestionOrder}>{questionNumber} OF 7</Text>
         </View>
         <View style={styles.hearts}>
-        {imageSources.slice(0, imageCount).map((source, index) => (
-        <Image 
-        key={index} 
-        source={source}
-        />))}
+          {imageSources.slice(0, imageCount).map((source, index) => (
+          <Image 
+          key={index} 
+          source={source}
+          />))}
+          {imageCount === 0 && (
+          <View style={styles.emptyHeartsPlaceholder}>
+          {/* Empty hearts placeholder */}
+        </View>
+  )}
 
         </View>
 
@@ -486,7 +517,10 @@ pressedNextButton: {
   backgroundColor: '#d9ca9c',
 
 },
-
+emptyHeartsPlaceholder: {
+  width: "100%", 
+  height: 32, 
+},
 
 
 });
