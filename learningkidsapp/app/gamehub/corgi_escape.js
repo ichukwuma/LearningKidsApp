@@ -68,11 +68,7 @@ export default function Page() {
     //   setIsModalVisible(false);
     // }, 9000); 
   };
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-
+ 
 //retry modal
 const [isRetryModalVisible, setIsRetryModalVisible] = useState(false);
 const showRetryModal = () => {
@@ -166,20 +162,28 @@ const increaseXP = () => {
             </View>
           </Modal>
 
-        {/*Retry Modal*/}
-          <Modal>
-            <View stule={styles.modalWrapper}>
-              <View style={styles.modalView}>
-                {/* content goes here */}
+        {/* Retry Modal -- change 'true' to 'isRetryModalVisible'*/}
+        <Modal animationType='slide' transparent={true} visible={true}> 
+          <View style={styles.retryModalWrapper}>
+            <View style={styles.retryBox}>
+                <Text>
+                  Testing the retry game modal.
+                </Text>
+              <View style={styles.retryOptionsArea}>
+                <Pressable style={styles.retryOptions}>
+                  <Text style={styles.answerText}>
+                    Back Home
+                  </Text>
+                </Pressable>
+                <Pressable style={styles.retryOptions} onPress={() => setIsRetryModalVisible(!isRetryModalVisible)}>
+                  <Text style={styles.answerText}>
+                    Retry
+                  </Text>
+                </Pressable>
               </View>
+            </View>
           </View>
-
-
-
-
-
-          </Modal>
-
+        </Modal>
 
 
         <Link href="/" asChild>
@@ -290,6 +294,43 @@ const styles = StyleSheet.create({
     zIndex: 1,
     top: 5,
     left: 5,
+  },
+  //modal background
+  retryModalWrapper:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+
+  retryBox:{
+    height: '40%',
+    width:'80%',
+    alignItems:'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgb(242, 184, 16)',
+    borderRadius: 15,
+
+  },
+  retryOptionsArea:{
+    flexDirection: 'row',
+    position:'absolute',
+    bottom: 0,
+    gap: 10,
+    width: "100%",
+    justifyContent: 'space-between',
+    padding: 25,
+
+
+  },
+  retryOptions:{
+    borderRadius: 7,
+    alignItems: 'center',
+    alignContent:'center',
+    height: 75,
+    width: 100,
+    backgroundColor: 'rgba(254, 248, 236, 1)',
+
   },
 
   modalWrapper: {
