@@ -105,6 +105,10 @@ const handleOptionPress = (pressedOption) => {
   }
   else{
     setImageCount(imageCount-1);
+    if(imageCount == 1)
+    {
+      setIsRetryModalVisible(true);
+    }
 
 
   }
@@ -143,6 +147,17 @@ const increaseXP = () => {
   setCurrentXP(currentXP + xpIncreaseAmount);
 };
 
+const resetGame = () => {
+  setImageCount(3); 
+  setScore(0);
+  setCurrentQuestionIndex(0); 
+  setQuestionNumber(1); 
+  setCurrentXP(0); 
+  setIsRetryModalVisible(false);
+  setSelectedOption(null);
+  setIsCorrect(null);
+};
+
 
 
 
@@ -162,24 +177,30 @@ const increaseXP = () => {
             </View>
           </Modal>
 
-        {/* Retry Modal -- change 'true' to 'isRetryModalVisible'*/}
-        <Modal animationType='slide' transparent={true} visible={true}> 
+        {/* Retry Modal */}
+        <Modal animationType='slide' transparent={true} visible={isRetryModalVisible}> 
           <View style={styles.retryModalWrapper}>
             <View style={styles.retryBox}>
-                <Text>
-                  Testing the retry game modal.
-                </Text>
-              <View style={styles.retryOptionsArea}>
-                <Pressable style={styles.retryOptions}>
+                <View style ={{position: 'absolute', top: 10}}>
                   <Text style={styles.answerText}>
-                    Back Home
+                    OH NO! You ran out of lives. Would you like to retry.
                   </Text>
-                </Pressable>
+                </View>
+              <View style={styles.retryOptionsArea}>
+                <Link href="/gamehub/corgi_escape" asChild onPress={resetGame}>
                 <Pressable style={styles.retryOptions} onPress={() => setIsRetryModalVisible(!isRetryModalVisible)}>
                   <Text style={styles.answerText}>
                     Retry
                   </Text>
                 </Pressable>
+                </Link>
+                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                  <Pressable style={styles.retryOptions}>
+                    <Text style={styles.answerText}>
+                      Game Hub
+                    </Text>
+                  </Pressable>
+                </Link>
               </View>
             </View>
           </View>
@@ -233,7 +254,7 @@ const increaseXP = () => {
 
         <View style={styles.answerArea}>
         {Questions[currentQuestionIndex].options.map((option) => (
-          <Pressable style= {[styles.answers, { backgroundColor: selectedOption === option ? (isCorrect ? 'rgb(126, 242, 94)' : 'red') : 'rgba(211, 211, 211, 0.3)' }]} //{({pressed })=> [styles.answers, pressed ? styles.pressedAnswer : styles.answers]}
+          <Pressable style= {[styles.answers, { backgroundColor: selectedOption === option ? (isCorrect ? 'rgb(126, 242, 94)' : 'red') : 'rgba(211, 211, 211, 0.3)' }]}
            onPress={() => handleOptionPress(option)}
            //one answer at a time
            disabled={selectedOption}>
@@ -308,18 +329,20 @@ const styles = StyleSheet.create({
     width:'80%',
     alignItems:'center',
     justifyContent: 'center',
-    backgroundColor: 'rgb(242, 184, 16)',
+    backgroundColor: '#A7C7E7',
     borderRadius: 15,
 
   },
   retryOptionsArea:{
-    flexDirection: 'row',
+    flexDirection: 'column',
     position:'absolute',
     bottom: 0,
-    gap: 10,
+    gap: 5,
     width: "100%",
     justifyContent: 'space-between',
     padding: 25,
+    alignItems: 'center',
+    
 
 
   },
@@ -327,10 +350,11 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     alignItems: 'center',
     alignContent:'center',
-    height: 75,
-    width: 100,
-    backgroundColor: 'rgba(254, 248, 236, 1)',
-
+    paddingVertical: 3,
+    width: '90%',
+    backgroundColor: '#f7e7b4',
+    borderWidth: 1,
+    
   },
 
   modalWrapper: {
