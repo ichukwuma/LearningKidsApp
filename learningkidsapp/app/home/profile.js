@@ -6,20 +6,65 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { getDatabase, ref, get } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
 
+const images = [
+    require('../../assets/profiles/cherry_dog.png'),
+    require('../../assets/profiles/pizza_dog.png'),
+    require('../../assets/profiles/icecream_dog.png'),
+    require('../../assets/profiles/banana_dog.png'),
+];
+
 export default function Profile() {
-    // Loading fonts here
     let [fontsLoaded] = useFonts({
-        EBGaramond_600SemiBold, EBGaramond_800ExtraBold
+        EBGaramond_600SemiBold,
+        EBGaramond_800ExtraBold,
     });
 
     const navigation = useNavigation();
-    const route = useRoute(); // Hook to access route params
-    const { child_username } = route.params; // Extracting child_username
+    const route = useRoute();
+    const { child_username } = route.params;
+    const [totalXP, setTotalXp] = useState(0);
+    const [level, setLevel] = useState(1);
+    const [xp, setXp] = useState(0);
+    const [selectedCorgi, setSelectedCorgi] = useState(null);
 
-    // Function to navigate back to the home screen
     const backButton = () => {
-        navigation.navigate('home/home', {child_username}); 
+        navigation.navigate('home/home', { child_username });
     };
+
+    useEffect(() => {
+        const parentId = auth.currentUser?.uid;
+
+        if (parentId) {
+            const childRef = ref(getDatabase(), `parents/${parentId}/children`);
+            get(childRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const childrenData = snapshot.val();
+                    const childData = Object.values(childrenData).find(child => child.username === child_username);
+                    if (childData) {
+                        setLevel(childData.level);
+                        setXp(childData.xp);
+                        setTotalXp(childData.totalXP);
+                       
+                    }
+                }
+            }).catch((error) => {
+                console.error("Error fetching Child data: ", error);
+            });
+
+            const corgiRef = ref(getDatabase(), `parents/${parentId}/corgis/${parentId}`);
+            get(corgiRef).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const corgiData = snapshot.val();
+                    if (corgiData && corgiData.selectedCorgi) {
+                        const matchingImage = images.find(image => image === corgiData.selectedCorgi);
+                        setSelectedCorgi(matchingImage);
+                    }
+                }
+            }).catch((error) => {
+                console.error("Error fetching Corgi data: ", error);
+            });
+        }
+    }, []);
 
     if (!fontsLoaded) {
         return null; 
@@ -32,8 +77,17 @@ export default function Profile() {
                 <Image source={require('../../assets/back_arrow.png')} style={styles.back_arrow_img} />
             </Pressable>
 
-            <Text style={styles.profileHeadingText}> {child_username} Profile</Text>
-            
+            <Text style={styles.profileHeadingText}>{child_username}'s Profile</Text>
+            {selectedCorgi && (
+                <View style={styles.userProfilePictureContainer}>
+                    <Image source={selectedCorgi} style={styles.doggoImage} />
+                </View>
+            )}
+
+            <Text style={styles.textBigger}>Level: {level}</Text>
+            <Text style={styles.textBigger}>XP: {xp}/{totalXP} </Text>
+            <Text style={styles.text}>{totalXP - xp} XP left</Text>
+            <Text style={styles.text}>to unlock new hat reward and level up.</Text>
         </View>
     );
 }
@@ -53,37 +107,25 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#000000',
-        fontSize: 16,
-        fontFamily: 'EBGaramond_800ExtraBold'
+        fontSize: 15,
+        fontFamily: 'EBGaramond_600SemiBold',
+    },
+    textBigger: {
+        color: '#000000',
+        fontSize: 25,
+        fontFamily: 'EBGaramond_800ExtraBold',
     },
     profileHeadingText: {
         fontSize: 30,
-        fontFamily: 'EBGaramond_600SemiBold'
+        fontFamily: 'EBGaramond_600SemiBold',
     },
     userProfilePictureContainer: {
         alignItems: 'center',
         padding: 20,
     },
-    imageContainer: {
-        position: 'relative', 
-        alignItems: 'center',
-    },
     doggoImage: {
         width: 200,
         height: 200,
-    },
-    expImage: {
-        width: 330,
-        height: 100,
-    },
-    xpLevelText: {
-        fontSize: 16,
-        textAlign: 'center'
-    },
-    expAndexpText: {
-        flexDirection: 'column', 
-        alignItems: 'center',
-        marginBottom: 10,
     },
     back_arrow_img: {
         position: 'absolute',
@@ -93,3 +135,5 @@ const styles = StyleSheet.create({
         height: 75,
     },
 });
+
+

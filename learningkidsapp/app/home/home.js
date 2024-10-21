@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Link, useRouter } from 'expo-router';
 import { useRoute, useNavigation } from '@react-navigation/native';
 
-export default function Home({ onPressGameHub, onPressWardrobe }) {
+export default function Home({ onPressGameHub, onPressWardrobe}) {
     const [selectedCorgi, setSelectedCorgi] = useState(null);
 
     let [fontsLoaded] = useFonts({
@@ -24,6 +24,10 @@ export default function Home({ onPressGameHub, onPressWardrobe }) {
     const logoutButton = () => {
         navigation.navigate('signup_login/login', {child_username}); 
     };
+
+    const emergency_contact_home_button = () => {
+        navigation.navigate('home/emergency_contact_home', {child_username}); 
+    };
     
     return (
         <View style={styles.container}>
@@ -40,24 +44,31 @@ export default function Home({ onPressGameHub, onPressWardrobe }) {
             </Link>
 
             <View style={styles.buttonsContainer}>
-                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                <Link href={`/gamehub/gamehub_mainscreen?child_username=${child_username}`} asChild>
                     <Pressable style={styles.button} onPress={onPressGameHub}>
                         <Text style={styles.text}>Game Hub</Text>
                     </Pressable>
                 </Link>
 
-                <Link href={{ pathname: '/home/wardrobe', params: { child_username, selectedCorgi } // Pass the selected image
+                <Link href={{ pathname: '/home/wardrobe', params: { child_username, selectedCorgi } // Pass the selected image + username
                 }} asChild>
                     <Pressable style={styles.button} onPress={onPressWardrobe}>
                         <Text style={styles.text}>Corgi Wardrobe</Text>
                     </Pressable>
                 </Link>
 
+                    <Pressable style={styles.button} onPress={emergency_contact_home_button}>
+                        <Text style={styles.text}>Add Emergency Contact</Text>
+                    </Pressable>
+            </View>
 
-                <Pressable style={styles.button} onPress={logoutButton}>
+
+            <View style={styles.upper_left_corner_button}>
+                <Pressable style={styles.smaller_button} onPress={logoutButton}>
                     <Text style={styles.text}>Logout</Text>
                 </Pressable>
             </View>
+                
         </View>
     );
 }
@@ -79,7 +90,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         position: 'absolute',
-        top: 120,
+        top: 150,
     },
     title: {
         fontSize: 25,
@@ -89,7 +100,7 @@ const styles = StyleSheet.create({
     buttonsContainer: {
         alignItems: 'center',
         position: 'absolute',
-        bottom: 50,
+        bottom: 70,
     },
     button: {
         width: 175,
@@ -101,12 +112,28 @@ const styles = StyleSheet.create({
     },
     text: {
         color: '#000000',
-        fontSize: 16,
+        fontSize: 15,
         fontFamily: 'EBGaramond_800ExtraBold',
         textAlign: 'center',
     },
     dogHouseImage: {
+        bottom: 60,
         width: 200,
         height: 200,
+    },
+    upper_left_corner_button: {
+        position: 'absolute',
+        top: 50,
+        left: 20,
+
+    },
+    smaller_button:{
+        width: 100,
+        padding: 10,
+        backgroundColor: '#f7e7b4',
+        borderRadius: 5,
+        marginVertical: 10,
+        alignItems: 'center',
+
     },
 });

@@ -2,15 +2,25 @@ import React from 'react';
 import { Pressable, Text, View, StyleSheet, Image} from 'react-native';
 import {  useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold} from '@expo-google-fonts/eb-garamond';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import { Link } from 'expo-router';
 
-export default function Button(clickButton) {
+export default function gamehub_mainscreen(clickButton) {
 
     {/*loading fonts here */}
     let [fontsLoaded] = useFonts({
         EBGaramond_600SemiBold,EBGaramond_800ExtraBold
     });
+
+     //route for back button
+     const route = useRoute();
+     const { child_username } = route.params; // Access the child's username
+     const navigation = useNavigation();
+ 
+     const backButton = () => {
+         navigation.navigate('home/home', {child_username}); 
+     };
+
     if (!fontsLoaded) {
         return null;
       }
@@ -21,11 +31,9 @@ export default function Button(clickButton) {
     const { onPressTreatFallsTutorial, treatFallsTutorialBtn = 'Tutorial' } = clickButton;
     const { onPressTreatFallsStart, treatFallsStartBtn = 'Start' } = clickButton;
 
-    //button to go back to index.js aka the first landing screen
-    const navigation = useNavigation();
-    const backButton = () => {
-        navigation.navigate('home/home');
-    };
+
+   
+
 
     
 
@@ -37,17 +45,6 @@ export default function Button(clickButton) {
         <Pressable style={styles.back_arrow_img} onPress={backButton}>
           <Image source={require('../../assets/back_arrow.png')} style={styles.back_arrow_img} />
         </Pressable>
-
-        <View  style={styles.coinAndGameHubTextContainer}>
-            {/* game hub header text */}
-            <Text style={styles.GameHubText}>Game Hub</Text>
-
-            {/* coin and coin name */}
-                <View style={styles.coinContainer}>
-                    <Image source={require('../../assets/games/45-32-Coin.png')} style={styles.coinImage} />
-                    <Text style={styles.coinTitle}>$Coins</Text>
-                </View>
-        </View>
 
         <View style={styles.corgiEscapeContainer}>
             <Image source={require('../../assets/scale5doggo.png')} style={styles.doggoImage} />
@@ -139,11 +136,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'EBGaramond_600SemiBold',
     },
-    coinImage: {
-        width: 70, 
-        height: 70, 
-        
-    },
     doggoImage: {
         width: 125, 
         height: 125,
@@ -151,22 +143,6 @@ const styles = StyleSheet.create({
     treatFallsImage:{
         width: 100, 
         height: 100,
-    },
-
-    coinTitle: {
-        fontSize: 14,
-        color: '#000000',
-        textAlign: 'center',
-        marginTop: 0,
-        fontFamily: 'EBGaramond_600SemiBold'
-    },
-    coinAndGameHubTextContainer: {
-        top: 35,
-       flexDirection: 'row', 
-       alignItems: 'center', 
-    },
-    coinContainer: {
-        alignItems: 'center', // Center align the image and title within the container
     },
     back_arrow_img: {
         position: 'absolute',

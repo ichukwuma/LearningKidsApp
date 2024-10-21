@@ -13,7 +13,7 @@ const images = [
     require('../../assets/profiles/banana_dog.png'),
 ];
 
-export default function Choose_Corgi_Hat_Signup() {
+export default function corgi_wardrobe() {
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [selectedCorgi, setSelectedCorgi] = useState(images[currentImageIndex]);
@@ -36,15 +36,12 @@ export default function Choose_Corgi_Hat_Signup() {
             const unsubscribe = onValue(corgiRef, (snapshot) => {
                 const data = snapshot.val();
                 if (data && data.selectedCorgi) {
-                    // Check if the selected Corgi is one of the images
                     const matchingImage = images.find(image => image === data.selectedCorgi);
                     if (matchingImage) {
                         setSelectedCorgi(matchingImage);
                     }
                 }
             });
-
-            // Cleanup the listener on unmount
             return () => unsubscribe();
         }
     }, [database]);
