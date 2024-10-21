@@ -3,57 +3,76 @@ import React, { useState } from 'react';
 import { Alert, Image, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold, EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRoute, useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../config/firebaseConfig';
-import { getDatabase, ref, get } from 'firebase/database';
-
+import { getDatabase, ref, get, update } from 'firebase/database';
 
 export default function LoginForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
-    
 
     const handleParentLogin = async () => {
-      if (!email || !password) {
-          Alert.alert('Error', 'Email and password are required!');
-      } else {
-          try {
-              const userCredential = await signInWithEmailAndPassword(auth, email, password);
-              const user = userCredential.user;
-  
-              Alert.alert('Login successful', `Welcome back!`);
-  
-              // Fetch child's username
-              const db = getDatabase();
-              const parentId = user.uid; // Get the current parent's UID
-              const childrenRef = ref(db, `parents/${parentId}/children`);
-  
-              const snapshot = await get(childrenRef);
-              if (snapshot.exists()) {
-                  const childrenData = snapshot.val();
-                  const childUsernames = Object.keys(childrenData).map(key => childrenData[key].username);
-                  const firstChildUsername = childUsernames[0]; // Get the first child's username
-  
-                  // Navigate to home and pass the child's username
-                  router.push({
-                      pathname: '/home/home',
-                      params: { child_username: firstChildUsername }
-                  });
-              } else {
-                  Alert.alert('No child accounts found for this parent.');
-              }
-  
-              // Clear input fields
-              setEmail('');
-              setPassword('');
-          } catch (error) {
-              Alert.alert('Login failed', 'Incorrect Email or Password');
-          }
-      }
-  };
+        if (!email || !password) {
+            Alert.alert('Error', 'Email and password are required!');
+        } else {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                Alert.alert('Login successful', `Welcome back!`);
+
+                const db = getDatabase();
+                const parentId = user.uid;
+                const childrenRef = ref(db, `parents/${parentId}/children`);
+
+                const snapshot = await get(childrenRef);
+                if (snapshot.exists()) {
+                    const childrenData = snapshot.val();
+                    const childUsernames = Object.keys(childrenData).map(key => childrenData[key].username);
+                    const firstChildUsername = childUsernames[0];
+
+
+                    const childData = Object.values(childrenData).find(child => child.username === firstChildUsername);
+
+                    let newXP = childData.xp || 0; 
+                    let totalXP = childData.totalXP || 0; 
+                    const lastLoginTime = new Date(childData.lastLogin || 0);
+                    const now = new Date();
+                    const hoursDiff = Math.floor((now - lastLoginTime) / (1000 * 60 * 60));
+
+                    if (hoursDiff >= 3) {
+                        newXP += 2; 
+                        totalXP += 0; 
+                    }
+
+
+                    const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
+                    const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
+                    await update(childRef, {
+                        xp: newXP,
+                        totalXP: totalXP,
+                        lastLogin: now.toISOString()
+                    });
+
+
+                    router.push({
+                        pathname: '/home/home',
+                        params: { child_username: firstChildUsername }
+                    });
+                } else {
+                    Alert.alert('No child accounts found for this parent.');
+                }
+
+                // Clear input fields
+                setEmail('');
+                setPassword('');
+            } catch (error) {
+                Alert.alert('Login failed', 'Incorrect Email or Password' );
+            }
+        }
+    };
 
     let [fontsLoaded] = useFonts({
         EBGaramond_600SemiBold, EBGaramond_800ExtraBold
@@ -62,9 +81,8 @@ export default function LoginForm() {
         return null;
     }
 
-    const navigation = useNavigation();
     const backButton = () => {
-        navigation.navigate('signup_login/landing_screen_2');
+        router.push('/signup_login/landing_screen_2'); 
     };
 
     return (
@@ -202,3 +220,5 @@ const styles = StyleSheet.create({
         height: 25,
     }
 });
+
+

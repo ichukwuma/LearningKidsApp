@@ -13,20 +13,13 @@ import { auth, database } from '../config/firebaseConfig';
 
 export default function ChildSignup() {
 
-  /*let [fontsLoaded] = useFonts({
-    EBGaramond_600SemiBold,EBGaramond_800ExtraBold
-  });
-  if (!fontsLoaded) {
-    return null;
-  }*/
 
-  const [email, setEmail] = useState(''); /*Inputs for the child name and user*/
+  const [email, setEmail] = useState(''); 
   const [childfirstname, setchildFirstName] = useState('');
   const [childlastname, setchildLastName] = useState('');
   const [username, setUsername] = useState('');
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter(); 
 
-  {/*1st landing screen button */}
   const navigation = useNavigation();
     const backButton = () => {
       navigation.navigate('signup_login/Screen1'); 
@@ -37,7 +30,7 @@ export default function ChildSignup() {
       Alert.alert('Error', 'All fields are required!');
       return;
     } 
-    const parentId = auth.currentUser?.uid; // Get parent’s unique ID
+    const parentId = auth.currentUser?.uid;
   
       if (!parentId) {
         Alert.alert('Error', 'Parent not authenticated.');
@@ -45,17 +38,17 @@ export default function ChildSignup() {
       }
   
       try {
-        // Reference to the parent's children node in Realtime Database
         const childrenRef = ref(database, `parents/${parentId}/children`);
         
-        // Create a new child entry under this parent
         const newChildRef = push(childrenRef);
   
-        // Save child's data under the new reference
         await set(newChildRef, {
           firstName: childfirstname,
           lastName: childlastname,
           username: username,
+          xp: 10, // child is awarded with 10 xp points when they sign up this will display later in their profile screen
+          level: 1, //all new users will start at level 1 
+          totalXP: 50 //total amount of xp for the user
         });
   
         Alert.alert('Successful child sign up', `${childfirstname} registered successfully!`);
