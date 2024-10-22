@@ -5,7 +5,7 @@ import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-//Landing Screen is the Main Entry of the Application, index.js = landing screen
+
 export default function landing_screen(clickButton) {
 
   {/*loading fonts here */}
@@ -16,10 +16,10 @@ export default function landing_screen(clickButton) {
     return null;
   }
 
-  //button to go to second landing page screen
+
   const {onPressLanding2} = clickButton;
 
-  //frontend
+
   return (
 
    <View style={styles.container}>

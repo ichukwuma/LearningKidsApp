@@ -18,7 +18,7 @@ export default function Home({ onPressGameHub, onPressWardrobe}) {
     }
 
     const route = useRoute();
-    const { child_username } = route.params; // Access the child's username
+    const { child_username } = route.params;
     const navigation = useNavigation();
 
     const logoutButton = () => {
@@ -36,9 +36,10 @@ export default function Home({ onPressGameHub, onPressWardrobe}) {
             <View style={styles.title_container}>
                 <Text style={styles.title}>Welcome Home, {child_username}!</Text>
             </View>
+            
 
             <Link href={`/home/profile?child_username=${child_username}`} asChild>
-                <Pressable style={styles.corgiEscapeContainer}>
+                <Pressable style={styles.corgiProfileHouseContainer}>
                     <Image source={require('../../assets/doggohouse.gif')} style={styles.dogHouseImage} />
                 </Pressable>
             </Link>
@@ -50,7 +51,7 @@ export default function Home({ onPressGameHub, onPressWardrobe}) {
                     </Pressable>
                 </Link>
 
-                <Link href={{ pathname: '/home/wardrobe', params: { child_username, selectedCorgi } // Pass the selected image + username
+                <Link href={{ pathname: '/home/wardrobe', params: { child_username, selectedCorgi } 
                 }} asChild>
                     <Pressable style={styles.button} onPress={onPressWardrobe}>
                         <Text style={styles.text}>Corgi Wardrobe</Text>
@@ -58,7 +59,7 @@ export default function Home({ onPressGameHub, onPressWardrobe}) {
                 </Link>
 
                     <Pressable style={styles.button} onPress={emergency_contact_home_button}>
-                        <Text style={styles.text}>Add Emergency Contact</Text>
+                        <Text style={styles.text}>Add New Contact</Text>
                     </Pressable>
             </View>
 
@@ -91,6 +92,20 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         position: 'absolute',
         top: 150,
+    },
+    sub_title_container:{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        position: 'absolute',
+        top: 200,
+
+    },
+    corgiProfileHouseContainer:{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        position: 'absolute',
+        top: 350,
+
     },
     title: {
         fontSize: 25,

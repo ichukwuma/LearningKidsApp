@@ -26,19 +26,19 @@ export default function ParentSignup() {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      // Show success alert
-      Alert.alert('Successful sign up', `Welcome ${parentfirstname}!`);
 
-      // Reset the form fields everytime submit button is hit
+      Alert.alert('Sign up sucessful', `Welcome ${parentfirstname}!`);
+
+      
       setEmail('');
       setParentFirstName('');
       setParentLastName('');
       setPassword('');
 
-      // Navigate to Screen1.5 and pass the first name of the parent to show on screen
+
       router.push({
         pathname: '/signup_login/Screen1.5',
-        //will be useful later to allow database info to show up on screens
+
         params: { parent_first_name: parentfirstname }
 
       });

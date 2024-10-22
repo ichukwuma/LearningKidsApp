@@ -36,25 +36,41 @@ export default function LoginForm() {
 
                     const childData = Object.values(childrenData).find(child => child.username === firstChildUsername);
 
+                    let newLevel = childData.level || 1;
                     let newXP = childData.xp || 0; 
                     let totalXP = childData.totalXP || 0; 
                     const lastLoginTime = new Date(childData.lastLogin || 0);
                     const now = new Date();
                     const hoursDiff = Math.floor((now - lastLoginTime) / (1000 * 60 * 60));
 
-                    if (hoursDiff >= 3) {
+                    if (hoursDiff >= 1) {
                         newXP += 2; 
                         totalXP += 0; 
                     }
 
-
-                    const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
-                    const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
-                    await update(childRef, {
-                        xp: newXP,
-                        totalXP: totalXP,
-                        lastLogin: now.toISOString()
-                    });
+                    //this should level up the child to level 2? has restraints because it might keep updating the childs level 
+                    //everytime they hit 50
+                    //multiple if else statements for next levels like level 3, 4, 5, 6 ,etc... 
+                    if (newXP >= 50) {
+                        // Leveling up logic
+                        const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
+                        const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
+                        await update(childRef, {
+                            xp: newXP - 50, // Reset to new XP minus the level-up threshold
+                            totalXP: totalXP + 25,
+                            lastLogin: now.toISOString(),
+                            selectedHatImage: require('../../assets/profiles/avocado_level2_dog.png'),
+                            level: 2,
+                        });
+                    } else {
+                        const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
+                        const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
+                        await update(childRef, {
+                            xp: newXP,
+                            totalXP: totalXP,
+                            lastLogin: now.toISOString(),
+                        });
+                    }
 
 
                     router.push({
@@ -65,7 +81,7 @@ export default function LoginForm() {
                     Alert.alert('No child accounts found for this parent.');
                 }
 
-                // Clear input fields
+      
                 setEmail('');
                 setPassword('');
             } catch (error) {

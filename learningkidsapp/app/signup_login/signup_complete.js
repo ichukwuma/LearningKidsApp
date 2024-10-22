@@ -71,14 +71,14 @@ const styles = StyleSheet.create({
         height: 175,
     },
     backButton: {
-        justifyContent: 'center', // Center the button
-        alignItems: 'center', // Center the content
-        marginTop: 20, // Optional: add some top margin
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        marginTop: 20, 
     },
     backArrow: {
         width: 75,
         height: 75,
-        transform: [{ scaleX: -1 }], // Flip horizontally
+        transform: [{ scaleX: -1 }], 
     },
     space: {
         height: 50,
