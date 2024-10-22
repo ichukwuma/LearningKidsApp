@@ -28,19 +28,18 @@ export default function Choose_Corgi_Hat_Signup() {
         return null;
     }
 
-    //Hooks we need to call all the time:
+
     const route = useRoute();
-    //to be able to pull child username to this screen
     const { child_username } = route.params; 
 
     const backButton = () => {
-        navigation.navigate('signup_login/Screen2'); // Adjust if necessary
+        navigation.navigate('signup_login/Screen2'); 
     };
 
  
 
     const handleSave = async () => {
-        const parentId = auth.currentUser?.uid; // Get parent's unique ID
+        const parentId = auth.currentUser?.uid;
     
         if (!parentId) {
             Alert.alert('Error', 'Parent not authenticated.');
@@ -48,16 +47,16 @@ export default function Choose_Corgi_Hat_Signup() {
         }
     
         try {
-            const selectedCorgiImage = images[currentImageIndex]; // Get the image reference
+            const selectedCorgiImage = images[currentImageIndex]; 
             const corgiRef = ref(database, `parents/${parentId}/corgis/${parentId}`);
             await set(corgiRef, {
-                selectedCorgi: selectedCorgiImage, // Store the image reference
+                selectedCorgi: selectedCorgiImage,
             });
     
             Alert.alert('Success', 'Corgi saved successfully!');
             router.push({
                 pathname: '/signup_login/EmergencyContact',
-                params: { child_username, selectedCorgi: selectedCorgiImage }, // Pass the selected image
+                params: { child_username, selectedCorgi: selectedCorgiImage }, 
             });
             
         } catch (error) {

@@ -11,6 +11,7 @@ const images = [
     require('../../assets/profiles/pizza_dog.png'),
     require('../../assets/profiles/icecream_dog.png'),
     require('../../assets/profiles/banana_dog.png'),
+    require('../../assets/profiles/avocado_level2_dog.png')
 ];
 
 export default function Profile() {

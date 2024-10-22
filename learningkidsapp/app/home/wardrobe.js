@@ -6,17 +6,19 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { getDatabase, ref, set, onValue } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
 
-const images = [
+const allImages = [
     require('../../assets/profiles/cherry_dog.png'),
     require('../../assets/profiles/pizza_dog.png'),
     require('../../assets/profiles/icecream_dog.png'),
     require('../../assets/profiles/banana_dog.png'),
+    require('../../assets/profiles/avocado_level2_dog.png'), // Level 2 image for corgi user will unlock later
 ];
 
-export default function corgi_wardrobe() {
-
+export default function CorgiWardrobe() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [selectedCorgi, setSelectedCorgi] = useState(images[currentImageIndex]);
+    const [selectedCorgi, setSelectedCorgi] = useState(null);
+    const [level, setLevel] = useState(1);
+    const [images, setImages] = useState([]); // State to hold the images based on level
     const navigation = useNavigation();
     const database = getDatabase();
     const router = useRouter();
@@ -32,20 +34,47 @@ export default function corgi_wardrobe() {
         const parentId = auth.currentUser?.uid;
 
         if (parentId) {
-            const corgiRef = ref(database, `parents/${parentId}/corgis/${parentId}`);
+            const corgiRef = ref(database, `parents/${parentId}/children`);
             const unsubscribe = onValue(corgiRef, (snapshot) => {
                 const data = snapshot.val();
-                if (data && data.selectedCorgi) {
-                    const matchingImage = images.find(image => image === data.selectedCorgi);
-                    if (matchingImage) {
-                        setSelectedCorgi(matchingImage);
+                if (data) {
+                    const childData = Object.values(data).find(child => child.username === child_username);
+                    if (childData) {
+                        setLevel(childData.level || 1);
+                        updateImages(childData.level);
+
+                        // Set selectedCorgi based on saved data
+                        const savedImage = childData.selectedHatImage;
+                        if (savedImage) {
+                            // Match the saved image to the image sources
+                            const matchingImage = allImages.find(image => image === savedImage);
+                            if (matchingImage) {
+                                setSelectedCorgi(matchingImage);
+                            } else {
+                                // If saved image is not found, default to first available image
+                                setSelectedCorgi(images[0] || allImages[0]);
+                            }
+                        }
                     }
                 }
             });
             return () => unsubscribe();
         }
     }, [database]);
-    
+
+    const updateImages = (level) => {
+        const availableImages = allImages.slice(0, 4); // Start with level 1 images
+
+        if (level >= 2) {
+            availableImages.push(allImages[4]); // Add level 2 image
+        }
+
+        setImages(availableImages);
+        // Set default selectedCorgi to the first image in availableImages
+        if (!selectedCorgi) {
+            setSelectedCorgi(availableImages[0]);
+        }
+    };
 
     const handleSave = async () => {
         const parentId = auth.currentUser?.uid;
@@ -90,11 +119,11 @@ export default function corgi_wardrobe() {
             </View>
 
             <View style={styles.corgi}>
-                <Image source={selectedCorgi} style={styles.corgiImage} />
+                {selectedCorgi && <Image source={selectedCorgi} style={styles.corgiImage} />}
             </View>
 
             <Text style={styles.text}>Choose a hat for your Corgi!</Text>
-            <Text style={styles.text}>Tap on a corgi</Text>
+            <Text style={styles.text}>Tap on a corgi to choose a new</Text>
             <Text style={styles.text}>or scroll side to side.</Text>
 
             <FlatList
@@ -179,3 +208,4 @@ const styles = StyleSheet.create({
         fontFamily: 'EBGaramond_800ExtraBold',
     },
 });
+

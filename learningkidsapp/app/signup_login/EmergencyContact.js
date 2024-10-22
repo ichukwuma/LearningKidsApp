@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, Text, View, StyleSheet, TextInput, Button, Alert, SafeAreaView} from 'react-native';
 import { useState, useEffect } from 'react';
 import { ScrollView } from 'react-native';
-import Dropdown from './Dropdown'; // Import the custom dropdown component
+import Dropdown from './Dropdown';
 import { ref, push, set, remove } from 'firebase/database';
 import { database } from '../config/firebaseConfig';
 import { auth } from '../config/firebaseConfig';
@@ -29,13 +29,13 @@ const EmergencyContacts = () => {
     phone: '',
     relationship: 'Relationship',
   });
-  const [editIndex, setEditIndex] = useState(null); // Track index of the contact being edited
-  const [firebaseKey, setFirebaseKey] = useState(null); // Store Firebase key of the contact being edited
+  const [editIndex, setEditIndex] = useState(null); 
+  const [firebaseKey, setFirebaseKey] = useState(null); 
 
   useEffect(() => {
     const fetchContacts = async () => {
       const parentId = auth.currentUser?.uid;
-      const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+      const childId = 'EmergencyContacts'; 
 
       if (!parentId || !childId) {
         Alert.alert('Error', 'Parent or Child ID missing.');
@@ -77,7 +77,7 @@ const EmergencyContacts = () => {
       relationship: contactToEdit.relationship,
     });
     setEditIndex(index);
-    setFirebaseKey(contactToEdit.key); // Store the Firebase key for updating
+    setFirebaseKey(contactToEdit.key);
     setShowForm(true);
   };
 
@@ -95,7 +95,7 @@ const EmergencyContacts = () => {
     }
 
     const parentId = auth.currentUser?.uid;
-    const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+    const childId = 'EmergencyContacts'; 
 
     if (!parentId || !childId) {
       Alert.alert('Error', 'Parent or Child ID missing.');
@@ -120,7 +120,7 @@ const EmergencyContacts = () => {
 
   const handleAddOrUpdateContact = () => {
     const parentId = auth.currentUser?.uid;
-    const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+    const childId = 'EmergencyContacts';
 
     if (!parentId || !childId) {
       Alert.alert('Error', 'Parent or Child ID missing.');
@@ -135,24 +135,24 @@ const EmergencyContacts = () => {
     const contactsRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts`);
 
     if (editIndex !== null && firebaseKey) {
-      // Override existing contact using `set` (which replaces data at the reference)
+
       const contactRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts/${firebaseKey}`);
       set(contactRef, newContact)
         .then(() => {
           const updatedContacts = [...contacts];
-          updatedContacts[editIndex] = { ...newContact, key: firebaseKey }; // Update local state
+          updatedContacts[editIndex] = { ...newContact, key: firebaseKey }; 
           setContacts(updatedContacts);
           Alert.alert('Success', 'Emergency contact updated successfully.');
           setNewContact({ name: '', address: '', phone: '', relationship: 'Mother' });
           setShowForm(false);
-          setEditIndex(null); // Reset after editing
-          setFirebaseKey(null); // Clear Firebase key
+          setEditIndex(null); 
+          setFirebaseKey(null); 
         })
         .catch((error) => {
           Alert.alert('Error', error.message);
         });
     } else {
-      // Add new contact
+
       const newContactRef = push(contactsRef);
       set(newContactRef, newContact)
         .then(() => {
@@ -193,12 +193,12 @@ const EmergencyContacts = () => {
               placeholder="Phone Number"
               value={newContact.phone}
               onChangeText={(text) => handleInputChange('phone', text)}
-              keyboardType="phone-pad" // Optimizes input for phone numbers
+              keyboardType="phone-pad" 
             />
             <Dropdown
               selectedValue={newContact.relationship}
               onValueChange={(value) => handleInputChange('relationship', value)}
-              options={[//relationship options
+              options={[
                 { label: 'Mother', value: 'Mother' },
                 { label: 'Father', value: 'Father' },
                 { label: 'Grandparent', value: 'Grandparent' },
@@ -347,5 +347,4 @@ const styles = StyleSheet.create({
   },
   
 });
-
 export default EmergencyContacts;
