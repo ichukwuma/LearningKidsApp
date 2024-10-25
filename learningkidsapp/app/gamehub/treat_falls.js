@@ -15,15 +15,6 @@ const TreatFalls = () => {
   const [lives, setLives] = useState(3);
   const entitiesRef = useRef(entities());
 
-
-  // const route = useRoute();
-  // const { child_username } = route.params;
-  // const navigation = useNavigation();
-  // const backButton = () => {
-  //   navigation.navigate('gamehub/gamehub_mainscreen', {child_username}); 
-  // };
-
-
        //route for back button
        const route = useRoute();
        const { child_username } = route.params; // Access the child's username
