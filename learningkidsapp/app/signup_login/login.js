@@ -56,7 +56,7 @@ export default function LoginForm() {
                         const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
                         const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
                         await update(childRef, {
-                            xp: newXP - 50, // Reset to new XP minus the level-up threshold
+                            xp: newXP - 50, 
                             totalXP: totalXP + 25,
                             lastLogin: now.toISOString(),
                             selectedHatImage: require('../../assets/profiles/avocado_level2_dog.png'),
@@ -153,7 +153,7 @@ export default function LoginForm() {
             <View style={styles.space} />
 
             <View style={{ flexDirection: 'column' }}>
-                <Link href="/signup_login/signup" asChild>
+                <Link href="/signup_login/landing_screen_2" asChild>
                     <Pressable>
                         <Text style={styles.HyperLinkText}>No Account? Sign Up Here.</Text>
                     </Pressable>
