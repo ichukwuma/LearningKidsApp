@@ -69,6 +69,14 @@ export default function Home({ onPressGameHub, onPressWardrobe}) {
                     <Text style={styles.text}>Logout</Text>
                 </Pressable>
             </View>
+
+
+            {/* settings button */}
+            <Link href={`/home/settings?child_username=${child_username}`} asChild>
+            <Pressable style={styles.settings_container}>
+                    <Image source={require('../../assets/settings_gear.png')} style={styles.settings_gear_image}/>
+            </Pressable>
+            </Link>
                 
         </View>
     );
@@ -107,6 +115,12 @@ const styles = StyleSheet.create({
         top: 350,
 
     },
+    settings_container:{
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        position: 'absolute',
+        top: 500,
+    },
     title: {
         fontSize: 25,
         textAlign: 'center',
@@ -136,11 +150,18 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
     },
+    settings_gear_image: {
+        bottom: 380,
+        width: 75,
+        height: 75,
+        position: 'absolute',
+        left: 100,
+        
+    },
     upper_left_corner_button: {
         position: 'absolute',
         top: 50,
         left: 20,
-
     },
     smaller_button:{
         width: 100,
@@ -149,6 +170,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginVertical: 10,
         alignItems: 'center',
-
     },
+    
 });
