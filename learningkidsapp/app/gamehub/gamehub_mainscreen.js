@@ -71,11 +71,12 @@ export default function gamehub_mainscreen(clickButton) {
                 </Pressable>
             </Link>
 
-            <Link href="/gamehub/treat_falls" asChild>
+            <Link href={`/gamehub/treat_falls?child_username=${child_username}`} asChild>
                 <Pressable style={styles.button} onPressTreatFallsStart={onPressTreatFallsStart}>
                     <Text style={styles.text}>{treatFallsStartBtn}</Text>
                 </Pressable>
             </Link>
+
         </View>
 
     </View>
