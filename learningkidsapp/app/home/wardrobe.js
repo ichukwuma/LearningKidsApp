@@ -11,14 +11,14 @@ const allImages = [
     require('../../assets/profiles/pizza_dog.png'),
     require('../../assets/profiles/icecream_dog.png'),
     require('../../assets/profiles/banana_dog.png'),
-    require('../../assets/profiles/avocado_level2_dog.png'), // Level 2 image for corgi user will unlock later
+    require('../../assets/profiles/avocado_level2_dog.png'), 
 ];
 
 export default function CorgiWardrobe() {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [selectedCorgi, setSelectedCorgi] = useState(null);
     const [level, setLevel] = useState(1);
-    const [images, setImages] = useState([]); // State to hold the images based on level
+    const [images, setImages] = useState([]); 
     const navigation = useNavigation();
     const database = getDatabase();
     const router = useRouter();

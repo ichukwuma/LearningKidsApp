@@ -71,8 +71,6 @@ export default function LoginForm() {
                             lastLogin: now.toISOString(),
                         });
                     }
-
-
                     router.push({
                         pathname: '/home/home',
                         params: { child_username: firstChildUsername }
