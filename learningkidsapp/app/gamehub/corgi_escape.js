@@ -4,42 +4,71 @@ import { Link } from 'expo-router';
 import { Questions } from '../config/questions';
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../config/firebaseConfig';
+import { database } from '../config/firebaseConfig'; // Your Firebase config
+import { ref, onValue } from 'firebase/database';
+import { auth } from '../config/firebaseConfig';
 
 export default function Page() {
-  const [emergencyContact, setEmergencyContact] = useState(''); // State for the emergency contact info
 
-  useEffect(() => {
-    // Function to fetch emergency contact info from Firestore
-    const fetchEmergencyContact = async () => {
-      try {
-        // Replace these with actual parent and child names
-        const parentName = "Parent1";
-        const childName = "Child1";
-
-        // Reference the emergency contact info for a specific child under a parent
-        const docRef = doc(db, `ParentsCollection/${parentName}/ChildrenCollection/${childName}/EmergencyContactsCollection/Contact1`);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          // Assuming the document contains fields like 'name', 'relationship', 'address', 'phone'
-          const contactData = docSnap.data();
-          const contactInfo = `
-            Name: ${contactData.name}
-            Relationship: ${contactData.relationship}
-            Address: ${contactData.address}
-            Phone: ${contactData.phone}
-          `;
-          setEmergencyContact(contactInfo); // Set the fetched data
-        } else {
-          console.log("No emergency contact info found");
+    const [contacts, setContacts] = useState([]);
+    const [currentQuestion, setCurrentQuestion] = useState('');
+    const [answer, setAnswer] = useState('');
+  
+    useEffect(() => {
+      const fetchContacts = async () => {
+        const parentId = auth.currentUser?.uid; // Get the current user's ID
+        const childId = 'EmergencyContacts'; // Replace with actual child ID logic
+  
+        if (!parentId || !childId) {
+          Alert.alert('Error', 'Parent or Child ID missing.');
+          return;
         }
-      } catch (error) {
-        console.error('Error fetching emergency contact: ', error);
-      }
+  
+        const contactsRef = ref(database, `parents/${parentId}/children/${childId}/emergencyContacts`);
+        onValue(contactsRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            const loadedContacts = Object.keys(data).map(key => ({ ...data[key], key }));
+            setContacts(loadedContacts);
+  
+            // Randomly select a contact
+            if (loadedContacts.length > 0) {
+              const randomIndex = Math.floor(Math.random() * loadedContacts.length);
+              const randomContact = loadedContacts[randomIndex];
+              setCurrentQuestion(`What is ${randomContact.name}'s phone number?`);
+              setAnswer(randomContact.phone); // Set the answer based on the selected contact
+            }
+          } else {
+            setContacts([]);
+            setCurrentQuestion('');
+            setAnswer('');
+          }
+        });
+      };
+  
+      fetchContacts();
+    }, []);
+  
+    const handleAnswerSelection = () => {
+      Alert.alert(`The answer is: ${answer}`); // Show the phone number
     };
 
-    fetchEmergencyContact(); // Fetch data when the component mounts
-  }, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [emergencyContact, setEmergencyContact] = useState(''); // State for the emergency contact info
+
 
 //score
   const increaseNum = 10;
@@ -75,6 +104,11 @@ const showRetryModal = () => {
   setIsRetryModalVisible(true);
 }
 
+//pause modal
+const [isPauseModalVisisble, setIsPauseModalVisible] = useState(false);
+const showPauseModal = () => {
+  setIsPauseModalVisible(true);
+}
 
 
 // random number generator
@@ -92,14 +126,14 @@ const [isCorrect, setIsCorrect] = useState(null);
 //console.log({isCorrect});
 //handle pressed option
 const handleOptionPress = (pressedOption) => {
-  setSelectedOption(pressedOption);
+  setSelectedOption(answer);
   // test
-  //Alert.alert(pressedOption);
+  //Alert.alert(answer);
 
-  const isAnswerCorrect = Questions[currentQuestionIndex].correctAnswer === pressedOption;
+  const isAnswerCorrect = Questions[currentQuestionIndex].answer === pressedOption;
   setIsCorrect(isAnswerCorrect)
 
-  if(isAnswerCorrect){
+  if(pressedOption != Questions[currentQuestionIndex].incorrect){
     increaseXP();
     incrementScore();
   }
@@ -114,22 +148,45 @@ const handleOptionPress = (pressedOption) => {
   }
 };
 
+const getBackgroundColor = (option) => {
+  if (selectedOption === option) {
+    return isCorrect ? 'red' : 'green'; // Correct answer -> green, Incorrect answer -> red
+  }
+  return 'rgba(211, 211, 211, 0.3)'; // Default background for unselected options
+};
 
 
 
 
 //next question
-const handleNext = () => {
-  if(currentQuestionIndex === 6){
-    return;
-  }
-  else{
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setSelectedOption(null);
-  }
+// const handleNext = () => {
+//   if(currentQuestionIndex === 6){
+//     return;
+//   }
+//   else{
+//     setCurrentQuestionIndex(currentQuestionIndex + 1);
+//     setSelectedOption(null);
+//   }
 
   
+// };
+
+// next question
+const handleNext = () => {
+  // Check if there are more questions to load
+  if (currentQuestionIndex < Questions.length - 1) {
+    setCurrentQuestionIndex(currentQuestionIndex + 1);
+    setQuestionNumber(prevNumber => prevNumber + 1); // Increase question number
+    setSelectedOption(null); // Reset selected option
+    setIsCorrect(null); // Reset answer feedback
+  } else {
+    Alert.alert("You've reached the last question!");
+  }
 };
+
+
+
+
 
 //Questions out of 7
 const [questionNumber, setQuestionNumber ]= useState(1);
@@ -158,6 +215,34 @@ const resetGame = () => {
   setIsCorrect(null);
 };
 
+
+
+//answer array randomize
+
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+
+const answersArray = [
+  <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
+    <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
+  </Pressable>,
+  <Pressable key={2} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
+    <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
+  </Pressable>,
+  <Pressable key={3} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
+    <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
+  </Pressable>
+];
+
+// Shuffle the answers before rendering
+const shuffledAnswers = shuffleArray(answersArray);
 
 
 
@@ -206,12 +291,48 @@ const resetGame = () => {
           </View>
         </Modal>
 
+        {/* Pause Modal */}
+        <Modal animationType='slide' transparent={true} visible={isPauseModalVisisble}>
+          <View style={styles.retryModalWrapper}>
+            <View style={styles.retryBox}>
+              <View style ={{position: 'absolute', top: 10}}>
+                <Text style={styles.answerText}>
+                  Game Paused
+                </Text>
+              </View>
+              <View style={styles.retryOptionsArea}>
+                <Pressable style={styles.retryOptions} onPress={() => setIsPauseModalVisible(false)}>
+                  <Text style={styles.answerText}>
+                    Resume
+                  </Text>
+                </Pressable>
+                <Pressable style={styles.retryOptions}>
+                  <Text style={styles.answerText}>
+                    Settings
+                  </Text>
+                </Pressable>
+                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                  <Pressable style={styles.retryOptions}>
+                    <Text style={styles.answerText}>
+                      GameHub
+                    </Text>
+                  </Pressable>
+                  </Link>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
-        <Link href="/" asChild>
-          <Pressable style={styles.Backbutton}>
-              <Text>Back To Index</Text>
+
+
+
+
+
+        
+          <Pressable style={styles.Backbutton} onPress={() => setIsPauseModalVisible(true)}>
+          <Image source={require('../../assets/pause_button.png')}/>
           </Pressable>
-        </Link>
+        
         <View>
           <Text style={styles.QuestionOrder}>{questionNumber} OF 7</Text>
         </View>
@@ -239,7 +360,7 @@ const resetGame = () => {
         </View>
 
         <View style={styles.questionArea}>
-          <Text style={styles.questionText}>{Questions[currentQuestionIndex].question}</Text>
+          <Text style={styles.questionText}>{currentQuestion}</Text>
           {/* {Questions.map((item) => (
             <View>
               <Text>{item.question}</Text>
@@ -250,10 +371,22 @@ const resetGame = () => {
           {/*<TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>*/}
         </View>
 
-        
-
         <View style={styles.answerArea}>
-        {Questions[currentQuestionIndex].options.map((option) => (
+        {shuffledAnswers.map((answerComponent) => answerComponent)}
+        
+         
+          {/*
+          <Pressable style={styles.answers} onPress={() => handleOptionPress(answer)}>
+            <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
+          </Pressable>
+          <Pressable style= {styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
+            <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>  
+          </Pressable>
+          <Pressable style= {styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
+            <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>  
+          </Pressable> */}
+
+        {/* {Questions[currentQuestionIndex].options.map((option) => (
           <Pressable style= {[styles.answers, { backgroundColor: selectedOption === option ? (isCorrect ? 'rgb(126, 242, 94)' : 'red') : 'rgba(211, 211, 211, 0.3)' }]}
            onPress={() => handleOptionPress(option)}
            //one answer at a time
@@ -262,26 +395,18 @@ const resetGame = () => {
                 <Text style={styles.answerText}>{option}</Text>
             </View>
           </Pressable>
-          ))}
+          ))} */}
         </View>
+
+
+
         <View style = {styles.nextButtonArea}>
           <Pressable style = {({ pressed }) => [styles.nextButton, pressed ? styles.pressedNextButton : styles.nextButton]}
-           onPress={() => {handleNext(); incrementQuestionNumber();}}>
+           onPress={() => {handleNext();}}>
             <Text>NEXT</Text>
           </Pressable>
         </View>
 
-
-        {/* <View style= {styles.testArea}>
-          <Pressable style={styles.button} onPress={incrementScore}>
-              <Text>Increment Score</Text>
-          </Pressable>
-
-          <Pressable style={styles.button} onPress={decrementHealth}>
-              <Text>Decrement Health</Text>
-          </Pressable>
-        </View> */}
-        
       <View style = {styles.hintArea}>
       <Pressable onPress={showModal}>
         <Image source={require('../../assets/games/hint2x.png')}/>
@@ -307,9 +432,9 @@ const styles = StyleSheet.create({
   Backbutton: {
     maxWidth: 200, // Set a fixed width or use maxWidth
     padding: 10,
-    backgroundColor: '#f7e7b4',
-    borderRadius: 5,
-    marginVertical: 10, 
+    //backgroundColor: '#f7e7b4',
+    //borderRadius: 5,
+    //marginVertical: 10, 
     alignItems: 'center',
     position: 'absolute',
     zIndex: 1,
@@ -321,16 +446,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0)',
   },
 
   retryBox:{
-    height: '40%',
+    height: '25%',
     width:'80%',
     alignItems:'center',
     justifyContent: 'center',
     backgroundColor: '#A7C7E7',
     borderRadius: 15,
+    borderWidth: 2,
+
 
   },
   retryOptionsArea:{
@@ -502,8 +629,8 @@ const styles = StyleSheet.create({
     //width: 400,
     minWidth: '100%',
     justifyContent: 'center',
-    
     fontFamily: 'EBGaramond_800ExtraBold',
+   
    
   },
   pressedAnswer: {

@@ -8,6 +8,7 @@ import { auth } from '../config/firebaseConfig';
 
 
 export default function LoginForm() {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
