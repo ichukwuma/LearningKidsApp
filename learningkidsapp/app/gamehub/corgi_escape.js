@@ -59,24 +59,13 @@ export default function Page() {
 
 
 
-
-
-
-
-
-
-
-
-  const [emergencyContact, setEmergencyContact] = useState(''); // State for the emergency contact info
-
-
 //score
   const increaseNum = 10;
   const [score, setScore] = useState(0);
   const incrementScore = () => {
     setScore(score + increaseNum);
   };
-//testing health
+
 //hearts
   const [imageCount, setImageCount] = useState(3);
   const imageSources = [
@@ -108,6 +97,12 @@ const showRetryModal = () => {
 const [isPauseModalVisisble, setIsPauseModalVisible] = useState(false);
 const showPauseModal = () => {
   setIsPauseModalVisible(true);
+}
+
+//finish modal
+const [isFinishModalVisible, setIsFinishModalVisible] = useState(false);
+const showFinishModal = () => {
+  setIsFinishModalVisible(true);
 }
 
 
@@ -174,13 +169,13 @@ const getBackgroundColor = (option) => {
 // next question
 const handleNext = () => {
   // Check if there are more questions to load
-  if (currentQuestionIndex < Questions.length - 1) {
+  if ((currentQuestionIndex < Questions.length - 1) && (currentQuestionIndex < 6)) {
     setCurrentQuestionIndex(currentQuestionIndex + 1);
     setQuestionNumber(prevNumber => prevNumber + 1); // Increase question number
     setSelectedOption(null); // Reset selected option
     setIsCorrect(null); // Reset answer feedback
   } else {
-    Alert.alert("You've reached the last question!");
+    setIsFinishModalVisible(true);
   }
 };
 
@@ -317,12 +312,46 @@ const shuffledAnswers = shuffleArray(answersArray);
                       GameHub
                     </Text>
                   </Pressable>
-                  </Link>
+                </Link>
               </View>
             </View>
           </View>
         </Modal>
 
+
+        <Modal animationType='slide' transparent={true} visible={isFinishModalVisible}>
+          <View style={styles.modalWrapper}>
+            <View style={styles.retryBox}>
+              <View style ={{position: 'absolute', top: 10}}>
+                <Text style={styles.answerText}>
+                  You Completed The Game!!!
+                </Text>
+              </View>
+              <View style={styles.finishDetails}>
+                <Text style={styles.answerText}>
+                  XP Earned: {currentXP} 
+                </Text>
+                <Text style={styles.answerText}>
+                  Score: {score}
+                </Text>
+              </View>
+              <View style={styles.retryOptionsArea}>
+                <Pressable style={styles.retryOptions} onPress={() => {setIsFinishModalVisible(false); resetGame();}}>
+                    <Text style={styles.answerText}>
+                      Play Again
+                    </Text>
+                </Pressable>
+                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                  <Pressable style={styles.retryOptions}>
+                      <Text style={styles.answerText}>
+                        GameHub
+                      </Text>
+                    </Pressable>
+                </Link>
+              </View>
+            </View>
+          </View>
+        </Modal>
 
 
 
@@ -456,9 +485,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#A7C7E7',
     borderRadius: 15,
-    borderWidth: 2,
-
-
+    borderWidth: 1,
+    
   },
   retryOptionsArea:{
     flexDirection: 'column',
@@ -469,7 +497,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 25,
     alignItems: 'center',
-    
+    paddingTop: 10
 
 
   },
@@ -508,9 +536,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modalText: {
-    fontSize: 14,
+  
+  finishDetails:{
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    width:'100%',
+    paddingHorizontal: 10,
+    position: 'absolute',
+    top: 60,
   },
+
 
   
   healthTest: {
