@@ -268,7 +268,7 @@ const shuffledAnswers = shuffleArray(answersArray);
             <View style={styles.retryBox}>
                 <View style ={{position: 'absolute', top: 10}}>
                   <Text style={styles.answerText}>
-                    OH NO! You ran out of lives. Would you like to retry.
+                    OH NO! You ran out of lives. Would you like to retry?
                   </Text>
                 </View>
               <View style={styles.retryOptionsArea}>
