@@ -8,10 +8,12 @@ import { auth } from '../config/firebaseConfig';
 
 const images = [
     require('../../assets/profiles/cherry_dog.png'),
-    require('../../assets/profiles/pizza_dog.png'),
-    require('../../assets/profiles/icecream_dog.png'),
+    require('../../assets/profiles/farmer_dog.png'),
+    require('../../assets/profiles/tophat_dog.png'),
+    require('../../assets/profiles/avocado_level2_dog.png'),
     require('../../assets/profiles/banana_dog.png'),
-    require('../../assets/profiles/avocado_level2_dog.png')
+    require('../../assets/profiles/icecream_dog.png'),
+    require('../../assets/profiles/pizza_dog.png'),
 ];
 
 export default function Profile() {

@@ -46,9 +46,9 @@ export default function ChildSignup() {
           firstName: childfirstname,
           lastName: childlastname,
           username: username,
-          xp: 10, // child is awarded with 10 xp points when they sign up this will display later in their profile screen
+          xp: 100, // child is awarded with 10 xp points when they sign up this will display later in their profile screen
           level: 1, //all new users will start at level 1 
-          totalXP: 50 //total amount of xp for the user
+          totalXP: 1000 //total amount of xp for the user
         });
   
         Alert.alert('Successful child sign up', `${childfirstname} registered successfully!`);
