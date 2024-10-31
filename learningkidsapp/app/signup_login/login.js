@@ -16,72 +16,74 @@ export default function LoginForm() {
     const handleParentLogin = async () => {
         if (!email || !password) {
             Alert.alert('Error', 'Email and password are required!');
-        } else {
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+            return;
+        }
     
-                Alert.alert('Login successful', `Welcome back!`);
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
     
-                const db = getDatabase();
-                const parentId = user.uid;
-                const childrenRef = ref(db, `parents/${parentId}/children`);
+            Alert.alert('Login successful', `Welcome back!`);
     
-                const snapshot = await get(childrenRef);
-                if (snapshot.exists()) {
-                    const childrenData = snapshot.val();
-                    const childUsernames = Object.keys(childrenData).map(key => childrenData[key].username);
-                    const firstChildUsername = childUsernames[0];
+            const db = getDatabase();
+            const parentId = user.uid;
+            const childrenRef = ref(db, `parents/${parentId}/children`);
     
-                    const childData = Object.values(childrenData).find(child => child.username === firstChildUsername);
+            const snapshot = await get(childrenRef);
+            if (snapshot.exists()) {
+                const childrenData = snapshot.val();
+                const childUsernames = Object.keys(childrenData).map(key => childrenData[key].username);
+                const firstChildUsername = childUsernames[0];
+                const childData = Object.values(childrenData).find(child => child.username === firstChildUsername);
+                
+                let newLevel = childData.level || 1;
+                let newXP = childData.xp || 0;
+                let totalXP = childData.totalXP || 0;
+                const lastLoginTime = new Date(childData.lastLogin || 0);
+                const now = new Date();
+                const secondsDiff = Math.floor((now - lastLoginTime) / 1000);
     
-                    let newLevel = childData.level || 1;
-                    let newXP = childData.xp || 0; 
-                    let totalXP = childData.totalXP || 0; 
-                    const lastLoginTime = new Date(childData.lastLogin || 0);
-                    const now = new Date();
-                    const secondsDiff = Math.floor((now - lastLoginTime) / 1000); // Calculate difference in seconds
-    
-                    if (secondsDiff >= 5) {
-                        newXP += 2; 
-                        totalXP += 0; 
-                    }
-    
-                    if (newXP >= 1000) {
-                        // Leveling up logic
-                        const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
-                        const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
-                        await update(childRef, {
-                            xp: newXP - 1000, 
-                            totalXP: totalXP + 700,
-                            lastLogin: now.toISOString(),
-                            selectedHatImage: require('../../assets/profiles/avocado_level2_dog.png'),
-                            level: 2,
-                        });
-                    } else {
-                        const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
-                        const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
-                        await update(childRef, {
-                            xp: newXP,
-                            totalXP: totalXP,
-                            lastLogin: now.toISOString(),
-                        });
-                    }
-                    router.push({
-                        pathname: '/home/home',
-                        params: { child_username: firstChildUsername }
-                    });
-                } else {
-                    Alert.alert('No child accounts found for this parent.');
+                // Earn XP
+                if (secondsDiff >= 5) {
+                    newXP += 2;
+                    console.log('XP Increased. New XP:', newXP);
+               
                 }
     
-                setEmail('');
-                setPassword('');
-            } catch (error) {
-                Alert.alert('Login failed', 'Incorrect Email or Password' );
+                // Level up logic
+                while (newXP >= 1000) {
+                    newXP -= 1000; // Deduct XP for leveling up
+                    newLevel++; // Increment level
+                    totalXP += 700; // Adjust total XP as needed
+                }
+    
+                const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
+                const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
+                
+                await update(childRef, {
+                    xp: newXP,
+                    totalXP: totalXP,
+                    lastLogin: now.toISOString(),
+                    level: newLevel, // Save the new level
+                    selectedHatImage: newLevel >= 2 ? require('../../assets/profiles/avocado_level2_dog.png') : childData.selectedHatImage, // Update image based on level
+                });
+    
+                // Navigate to the home page
+                router.push({
+                    pathname: '/home/home',
+                    params: { child_username: firstChildUsername }
+                });
+            } else {
+                Alert.alert('No child accounts found for this parent.');
             }
+    
+            setEmail('');
+            setPassword('');
+        } catch (error) {
+            Alert.alert('Login failed', 'Incorrect Email or Password');
         }
     };
+    
     
 
     let [fontsLoaded] = useFonts({
