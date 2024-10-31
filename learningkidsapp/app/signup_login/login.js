@@ -52,9 +52,9 @@ export default function LoginForm() {
     
                 // Level up logic
                 while (newXP >= 1000) {
-                    newXP -= 1000; // Deduct XP for leveling up
-                    newLevel++; // Increment level
-                    totalXP += 700; // Adjust total XP as needed
+                    newXP -= 1000; 
+                    newLevel++; 
+                    totalXP += 700; 
                 }
     
                 const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
