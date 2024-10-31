@@ -20,44 +20,40 @@ export default function LoginForm() {
             try {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-
+    
                 Alert.alert('Login successful', `Welcome back!`);
-
+    
                 const db = getDatabase();
                 const parentId = user.uid;
                 const childrenRef = ref(db, `parents/${parentId}/children`);
-
+    
                 const snapshot = await get(childrenRef);
                 if (snapshot.exists()) {
                     const childrenData = snapshot.val();
                     const childUsernames = Object.keys(childrenData).map(key => childrenData[key].username);
                     const firstChildUsername = childUsernames[0];
-
-
+    
                     const childData = Object.values(childrenData).find(child => child.username === firstChildUsername);
-
+    
                     let newLevel = childData.level || 1;
                     let newXP = childData.xp || 0; 
                     let totalXP = childData.totalXP || 0; 
                     const lastLoginTime = new Date(childData.lastLogin || 0);
                     const now = new Date();
-                    const hoursDiff = Math.floor((now - lastLoginTime) / (1000 * 60 * 60));
-
-                    if (hoursDiff >= 1) {
+                    const secondsDiff = Math.floor((now - lastLoginTime) / 1000); // Calculate difference in seconds
+    
+                    if (secondsDiff >= 5) {
                         newXP += 2; 
                         totalXP += 0; 
                     }
-
-                    //this should level up the child to level 2? has restraints because it might keep updating the childs level 
-                    //everytime they hit 50
-                    //multiple if else statements for next levels like level 3, 4, 5, 6 ,etc... 
-                    if (newXP >= 50) {
+    
+                    if (newXP >= 1000) {
                         // Leveling up logic
                         const childKey = Object.keys(childrenData).find(key => childrenData[key].username === firstChildUsername);
                         const childRef = ref(db, `parents/${parentId}/children/${childKey}`);
                         await update(childRef, {
-                            xp: newXP - 50, 
-                            totalXP: totalXP + 25,
+                            xp: newXP - 1000, 
+                            totalXP: totalXP + 700,
                             lastLogin: now.toISOString(),
                             selectedHatImage: require('../../assets/profiles/avocado_level2_dog.png'),
                             level: 2,
@@ -78,8 +74,7 @@ export default function LoginForm() {
                 } else {
                     Alert.alert('No child accounts found for this parent.');
                 }
-
-      
+    
                 setEmail('');
                 setPassword('');
             } catch (error) {
@@ -87,6 +82,7 @@ export default function LoginForm() {
             }
         }
     };
+    
 
     let [fontsLoaded] = useFonts({
         EBGaramond_600SemiBold, EBGaramond_800ExtraBold
@@ -234,5 +230,7 @@ const styles = StyleSheet.create({
         height: 25,
     }
 });
+
+
 
 

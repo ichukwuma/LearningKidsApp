@@ -8,10 +8,12 @@ import { auth } from '../config/firebaseConfig';
 
 const allImages = [
     require('../../assets/profiles/cherry_dog.png'),
-    require('../../assets/profiles/pizza_dog.png'),
-    require('../../assets/profiles/icecream_dog.png'),
+    require('../../assets/profiles/farmer_dog.png'),
+    require('../../assets/profiles/tophat_dog.png'),
+    require('../../assets/profiles/avocado_level2_dog.png'),
     require('../../assets/profiles/banana_dog.png'),
-    require('../../assets/profiles/avocado_level2_dog.png'), 
+    require('../../assets/profiles/icecream_dog.png'),
+    require('../../assets/profiles/pizza_dog.png'),
 ];
 
 export default function CorgiWardrobe() {
@@ -63,18 +65,23 @@ export default function CorgiWardrobe() {
     }, [database]);
 
     const updateImages = (level) => {
-        const availableImages = allImages.slice(0, 4); // Start with level 1 images
-
-        if (level >= 2) {
-            availableImages.push(allImages[4]); // Add level 2 image
-        }
-
+        const availableImages = allImages.slice(0, 3); // Start with level 1 images (up to index 2)
+        
+        // Add hats based on the level
+        if (level >= 2) availableImages.push(allImages[3]); // Level 2: Add avocado hat
+        if (level >= 3) availableImages.push(allImages[4]); // Level 3: Add banana hat
+        if (level >= 4) availableImages.push(allImages[5]); // Level 4: Add ice cream hat
+        if (level >= 5) availableImages.push(allImages[6]); // Level 5: Add pizza hat
+    
         setImages(availableImages);
-        // Set default selectedCorgi to the first image in availableImages
+        
+        // Set default selectedCorgi if not already set
         if (!selectedCorgi) {
             setSelectedCorgi(availableImages[0]);
         }
     };
+    
+    
 
     const handleSave = async () => {
         const parentId = auth.currentUser?.uid;
