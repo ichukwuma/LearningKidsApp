@@ -57,6 +57,8 @@ export default function Page() {
 
 
 
+// next button
+const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
 
 
 //score
@@ -121,14 +123,15 @@ const [isCorrect, setIsCorrect] = useState(null);
 //console.log({isCorrect});
 //handle pressed option
 const handleOptionPress = (pressedOption) => {
-  setSelectedOption(answer);
+  setSelectedOption(pressedOption);
+  setIsNextButtonDisabled(false);
   // test
   //Alert.alert(answer);
 
-  const isAnswerCorrect = Questions[currentQuestionIndex].answer === pressedOption;
+  const isAnswerCorrect = Questions[currentQuestionIndex].correctAnswer === pressedOption;
   setIsCorrect(isAnswerCorrect)
 
-  if(pressedOption != Questions[currentQuestionIndex].incorrect){
+  if(isAnswerCorrect){
     increaseXP();
     incrementScore();
   }
@@ -154,30 +157,31 @@ const getBackgroundColor = (option) => {
 
 
 //next question
-// const handleNext = () => {
-//   if(currentQuestionIndex === 6){
-//     return;
-//   }
-//   else{
-//     setCurrentQuestionIndex(currentQuestionIndex + 1);
-//     setSelectedOption(null);
-//   }
-
-  
-// };
-
-// next question
 const handleNext = () => {
-  // Check if there are more questions to load
-  if ((currentQuestionIndex < Questions.length - 1) && (currentQuestionIndex < 6)) {
+  if((currentQuestionIndex < Questions.length - 1) && (currentQuestionIndex < 6)){
     setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setQuestionNumber(prevNumber => prevNumber + 1); // Increase question number
-    setSelectedOption(null); // Reset selected option
-    setIsCorrect(null); // Reset answer feedback
-  } else {
+    setSelectedOption(null);
+    setIsNextButtonDisabled(true);
+  }
+  else{
     setIsFinishModalVisible(true);
   }
+
+  
 };
+
+// next question
+// const handleNext = () => {
+//   // Check if there are more questions to load
+//   if ((currentQuestionIndex < Questions.length - 1) && (currentQuestionIndex < 6)) {
+//     setCurrentQuestionIndex(currentQuestionIndex + 1);
+//     setQuestionNumber(prevNumber => prevNumber + 1); // Increase question number
+//     setSelectedOption(null); // Reset selected option
+//     setIsCorrect(null); // Reset answer feedback
+//   } else {
+//     setIsFinishModalVisible(true);
+//   }
+// };
 
 
 
@@ -212,33 +216,33 @@ const resetGame = () => {
 
 
 
+
 //answer array randomize
 
 
 function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+  return array
+    .map(value => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
 }
 
 
-const answersArray = [
-  <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
-    <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
-  </Pressable>,
-  <Pressable key={2} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
-    <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
-  </Pressable>,
-  <Pressable key={3} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
-    <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
-  </Pressable>
-];
+// const answersArray = [
+//   <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
+//     <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
+//   </Pressable>,
+//   <Pressable key={2} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
+//     <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
+//   </Pressable>,
+//   <Pressable key={3} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
+//     <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
+//   </Pressable>
+// ];
 
 // Shuffle the answers before rendering
-const shuffledAnswers = shuffleArray(answersArray);
-
+const shuffledOptions = shuffleArray(Questions[currentQuestionIndex].options);
+const shuffledQuestions = shuffleArray(Questions);
 
 
   return (
@@ -318,7 +322,7 @@ const shuffledAnswers = shuffleArray(answersArray);
           </View>
         </Modal>
 
-
+      {/* finshed game modal */}
         <Modal animationType='slide' transparent={true} visible={isFinishModalVisible}>
           <View style={styles.modalWrapper}>
             <View style={styles.retryBox}>
@@ -343,10 +347,10 @@ const shuffledAnswers = shuffleArray(answersArray);
                 </Pressable>
                 <Link href="/gamehub/gamehub_mainscreen" asChild>
                   <Pressable style={styles.retryOptions}>
-                      <Text style={styles.answerText}>
-                        GameHub
-                      </Text>
-                    </Pressable>
+                    <Text style={styles.answerText}>
+                      GameHub
+                    </Text>
+                  </Pressable>
                 </Link>
               </View>
             </View>
@@ -389,19 +393,25 @@ const shuffledAnswers = shuffleArray(answersArray);
         </View>
 
         <View style={styles.questionArea}>
-          <Text style={styles.questionText}>{currentQuestion}</Text>
-          {/* {Questions.map((item) => (
+
+
+
+        <Text style={styles.questionText}>{Questions[currentQuestionIndex].question}</Text>
+
+        
+          {/* <Text style={styles.questionText}>{currentQuestion}</Text> */}
+           {/* {Questions.map((item) => (
             <View>
               <Text>{item.question}</Text>
             </View>
           ))} */}
           
           
-          {/*<TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>*/}
+          
         </View>
 
         <View style={styles.answerArea}>
-        {shuffledAnswers.map((answerComponent) => answerComponent)}
+        {/* {shuffledAnswers.map((answerComponent) => answerComponent)} */}
         
          
           {/*
@@ -415,7 +425,7 @@ const shuffledAnswers = shuffleArray(answersArray);
             <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>  
           </Pressable> */}
 
-        {/* {Questions[currentQuestionIndex].options.map((option) => (
+        {Questions[currentQuestionIndex].options.map((option) => (
           <Pressable style= {[styles.answers, { backgroundColor: selectedOption === option ? (isCorrect ? 'rgb(126, 242, 94)' : 'red') : 'rgba(211, 211, 211, 0.3)' }]}
            onPress={() => handleOptionPress(option)}
            //one answer at a time
@@ -424,14 +434,13 @@ const shuffledAnswers = shuffleArray(answersArray);
                 <Text style={styles.answerText}>{option}</Text>
             </View>
           </Pressable>
-          ))} */}
+          ))}
         </View>
 
-
-
         <View style = {styles.nextButtonArea}>
-          <Pressable style = {({ pressed }) => [styles.nextButton, pressed ? styles.pressedNextButton : styles.nextButton]}
-           onPress={() => {handleNext();}}>
+        
+          <Pressable style = {({ pressed }) => [styles.nextButton,  pressed ? styles.pressedNextButton : styles.nextButton, isNextButtonDisabled && { opacity: 0.5 }]}
+           onPress={() => {handleNext(); incrementQuestionNumber();}}  disabled={isNextButtonDisabled}>
             <Text>NEXT</Text>
           </Pressable>
         </View>
