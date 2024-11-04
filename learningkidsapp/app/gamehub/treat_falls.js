@@ -5,14 +5,13 @@ import Matter from 'matter-js';
 import entities from '../entities';
 import Treat from '../components/Treat';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import { getDatabase, ref, get, update } from 'firebase/database';
+import { auth } from '../config/firebaseConfig';
+import TreatQuestions from '../config/treat_questions';
+
 
 const { width, height } = Dimensions.get('window');
 const TREAT_SIZE = 50; // Moved treatSize to a constant at component level
-//importing questions
-//import TreatQuestions from '../config/treat_questions';
-// import { Questions } from './treat_questions';
-
-
 
 //Hitbox definition for debugging, toggle off and on
 // const Hitbox = ({ x, y, width, height }) => {
@@ -36,8 +35,17 @@ const TREAT_SIZE = 50; // Moved treatSize to a constant at component level
 const TreatFalls = () => {
   const [running, setRunning] = useState(true);
   const [gameEngine, setGameEngine] = useState(null);
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0); // total game points (per game)
   const [lives, setLives] = useState(3);
+  const [showQuestionModal, setShowQuestionModal] = useState(false); 
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //choose index of question to show (randomly generated later)
+  const [isGameOver, setGameOver] = useState(false); // State for game over
+  const [xpPoints, setXpPoints] = useState(0); // State to track XP points separate from total game points
+  const [questionsAnswered, setQuestionsAnswered] = useState(0); // Track the number of questions answered
+  const totalXp = score + xpPoints; // total XP earned per game (including in-game score + XP from correctly answered questions)
+
+
+  
   const entitiesRef = useRef(entities());
 
        //route for back button
@@ -55,6 +63,7 @@ const TreatFalls = () => {
 
     useEffect(() => {
       setRunning(true);
+      setGameOver(false); // Reset game over state when component mounts
     }, []);
 
 
@@ -90,8 +99,40 @@ const TreatFalls = () => {
   };
 
   //hitbox conditional state for debugging
-  const [showHitbox, setShowHitbox] = useState(true); // Toggle to hide after testing
+  // const [showHitbox, setShowHitbox] = useState(true); // Toggle to hide after testing
 
+//Question Answering
+  const handleAnswerSelection = (selectedIndex) => {
+    const correctAnswer = TreatQuestions[currentQuestionIndex].answer;
+    if (selectedIndex === correctAnswer) {
+      // Reward or provide feedback for the correct answer
+      // Increase XP by 20 on a correct answer
+      setXpPoints(prevXp => prevXp + 20);
+      // else, no negative effects
+    //For negative effects on if incorrect answer, or to remove lives 
+    // } else {
+    //   setLives(prevLives => {
+    //     const newLives = prevLives - 1;
+    //     if (newLives <= 0) {
+    //       setGameOver(true); // Set game over state
+    //       setRunning(false); // Stop the game
+    //     }
+    //     return newLives;
+    //   });
+    }
+    // question counter
+    setQuestionsAnswered(prevCount => {
+      const newCount = prevCount + 1;
+      if (newCount >= 3) {
+        setGameOver(true);
+        setRunning(false); // End the game when 3 questions are answered
+      }
+      return newCount;
+    });
+
+    setShowQuestionModal(false);
+    setRunning(true); // Resume the game after answering
+  };
 
 
   const updateHandler = (entities, { time, dispatch }) => {
@@ -105,7 +146,6 @@ const TreatFalls = () => {
       const newTreatId = `treat-${Date.now()}`;
       entities[newTreatId] = newTreat;
     };
-    //removed semicolon from above line, idk if needed
 
     Object.keys(entities).forEach(key => {
       if (key.startsWith('treat')) {
@@ -124,39 +164,58 @@ const TreatFalls = () => {
           });
         }
 
-        ///////
-        // from previous implementation
-
-        // Matter.Body.setVelocity(treat.body, { x: 0, y: 5 });
-        
-        // if (treat.body.position.y > height + 50) {
-        //   Matter.World.remove(world, treat.body);
-        //   delete entities[key];
-        // }
-        ////////
-
         // Now using TREAT_SIZE constant
         if (treat.body.position.y > height + TREAT_SIZE) {
           Matter.Composite.remove(world, treat.body);
           delete entities[key];
         }
-        
-        if (entities.Corgi && Matter.Collision.collides(treat.body, entities.Corgi.body)) {
-          if (treat.treatType === 'good') {
-            setScore(prevScore => prevScore + 1);
-          } else {
-            setLives(prevLives => {
-              const newLives = prevLives - 1;
-              if (newLives <= 0) {
-                dispatch({ type: 'game_over' });
-              }
-              return newLives;
-            });
-          }
-          Matter.World.remove(world, treat.body);
-          delete entities[key];
+
+        //Question Generation with Collision Updated
+        // Handle collisions only if the game is running
+      if (running && entities.Corgi && Matter.Collision.collides(treat.body, entities.Corgi.body)) {
+        if (treat.treatType === 'good') {
+          setScore(prevScore => {
+            const newScore = prevScore + 1;
+
+            // Check if a question should be shown
+            if (newScore % 30 === 0 && questionsAnswered < 3) { // Show a question every 30 points, up to 3 times
+              setShowQuestionModal(true);
+              setCurrentQuestionIndex(Math.floor(Math.random() * TreatQuestions.length));
+              setRunning(false); // Pause the game
+
+            // if (newScore % 30 === 0) { //change number to adjust when a question appears after x points collected
+            //   setShowQuestionModal(true);
+            //   setCurrentQuestionIndex(Math.floor(Math.random() * TreatQuestions.length));
+            //   setRunning(false); // Pause the game
+
+              
+              // Clear existing treats when question appears
+              Object.keys(entities).forEach(key => {
+                if (key.startsWith('treat')) {
+                  Matter.World.remove(world, entities[key].body);
+                  delete entities[key];
+                }
+              });
+
+            }
+            return newScore;
+          });
+        } else {
+          setLives(prevLives => {
+            const newLives = prevLives - 1;
+            if (newLives <= 0) {
+              setGameOver(true);
+              dispatch({ type: 'game_over' });
+            }
+            return newLives;
+          });
         }
-        //added this for treat generation fix
+        Matter.World.remove(world, treat.body);
+        delete entities[key];
+      }
+//end of question gen + treat collisions
+
+        //Treat Lifetime Management
         const treatLifetime = Date.now() - treat.created;
         if (treatLifetime > 10000) {
           Matter.Composite.remove(world, treat.body);
@@ -165,8 +224,33 @@ const TreatFalls = () => {
       }
     });
 
+     //function to update XP
+//   const updateUserXp = async (totalXp) => {
+//     const parentId = auth.currentUser?.uid;
+//     if (parentId) {
+//         const childRef = ref(getDatabase(), `parents/${parentId}/children/${child_username}`);
+//         await update(childRef, {
+//             totalXP: totalXP,  // Update the total XP
+//         }).catch((error) => {
+//             console.error("Error updating XP: ", error);
+//         });
+//     }
+// };
+
+    //idk about this but it sets game over if lives fall under zero or more than 3 questions are answered
+    // Handle game over condition based on lives
+  if (lives <= 0 || questionsAnswered >= 3) {
+    setGameOver(true);
+    setRunning(false);
+    // updateUserXp(totalXp); // Call the function to update XP
+    dispatch({ type: 'game_over' });
+  }
+
     return entities;
   };
+  
+ 
+
 
   //Screen appearance
   return (
@@ -191,6 +275,7 @@ const TreatFalls = () => {
             }
           }}
         />
+
       {/* Hitbox Rendering for Debugging, Toggle off and on */}
       {/* {showHitbox && entitiesRef.current.Corgi && (
         <Hitbox
@@ -200,20 +285,51 @@ const TreatFalls = () => {
           height={entitiesRef.current.Corgi.body.bounds.max.y - entitiesRef.current.Corgi.body.bounds.min.y}
         />
       )} */}
+
       {/* Displaying score and lives on screen */}
         <Text style={styles.score}>Score: {score}</Text>
         <Text style={styles.lives}>Lives: {lives}</Text>
 
       {/* Game Over Overlay */}
-        {!running && (
+        {isGameOver && (
           <View style={styles.gameOverOverlay}>
             <Text style={styles.gameOverText}>Game Over</Text>
             <Text style={styles.finalScoreText}>Final Score: {score}</Text>
+            <Text style={styles.finalXpText}>Question XP Bonus: + {xpPoints}</Text>
+            <Text style={styles.totalXpText}>Total XP Earned: {totalXp}</Text>
             <Pressable style={styles.gameOverBackButton} onPress={gameOverBackButton}>
               <Text style={styles.buttonText}>Back to Game Hub</Text>
             </Pressable>
           </View>
         )}
+
+      {/* Question Generation */}
+      {showQuestionModal && (
+            <Modal
+                transparent={true}
+                animationType="slide"
+                visible={showQuestionModal}
+                onRequestClose={() => setShowQuestionModal(false)}
+            >
+                <View style={styles.modalBackground}>
+                  <View style={styles.modalContainer}>
+                      <Text style={styles.questionText}>
+                          {TreatQuestions[currentQuestionIndex].question}
+                      </Text>
+                      {TreatQuestions[currentQuestionIndex].options.map((option, index) => (
+                          <Pressable
+                              key={index}
+                              style={styles.optionButton}
+                              onPress={() => handleAnswerSelection(index)}
+                          >
+                              <Text style={styles.optionText}>{option}</Text>
+                          </Pressable>
+                      ))}
+                  </View>
+                </View>
+            </Modal>
+        )}
+{/* End of Render */}
       </View>
     </ImageBackground>
   );
@@ -221,10 +337,17 @@ const TreatFalls = () => {
 
 // Stylesheets
 const styles = StyleSheet.create({
+  // container: {
+  //   justifyContent: 'center',
+  //   alignItems: 'center',       
+  //   backgroundColor: '#A7C7E7',
+  //   ...StyleSheet.absoluteFillObject
+  // },
   backgroundImage: {
     flex: 1,
     width: '100%',
     height: '100%',
+    // ...StyleSheet.absoluteFillObject
   },
   container: {
     flex: 1,
@@ -294,6 +417,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'EBGaramond_800ExtraBold'
   },
+  finalXpText: {
+    fontSize: 24,
+    color: 'white',
+    marginTop: 10,
+    fontFamily: 'EBGaramond_800ExtraBold'
+  },
+  totalXpText: {
+    fontSize: 24,
+    color: 'white',
+    marginTop: 10,
+    fontFamily: 'EBGaramond_800ExtraBold'
+  },
   backButton: {
     position: 'absolute',
     top: 40,
@@ -303,6 +438,54 @@ const styles = StyleSheet.create({
   backArrowImage: {
     width: 50,
     height: 50,
+  },
+//question generation styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  questionText: {
+    fontSize: 20,
+    color: 'black',
+    textAlign: 'center',
+    marginBottom: 10,
+    fontFamily: 'EBGaramond_600SemiBold'
+  },
+  optionButton: {
+    backgroundColor: '#f7e7b4',
+    padding: 10,
+    marginVertical: 5,
+    textAlign: 'center',
+    borderRadius: 5,
+    fontFamily: 'EBGaramond_600SemiBold'
+  },
+  optionText: {
+    color: '#000',
+    fontSize: 16,
+    fontFamily: 'EBGaramond_600SemiBold'
+    
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+      width: '80%', // Width of the card
+      backgroundColor: '#A7C7E7', // White background for the card
+      borderRadius: 10, // Rounded corners
+      padding: 20, // Padding inside the card
+      elevation: 10, // Shadow effect on Android
+      shadowColor: '#000', // Shadow color for iOS
+      shadowOffset: {
+          width: 0,
+          height: 2,
+      },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
   },
 });
 

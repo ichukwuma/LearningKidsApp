@@ -42,7 +42,7 @@ export default restart => {
     //     createTreat,
     // }
     // Calculate corgi size based on screen dimensions
-    const corgiWidth = width * 0.20; // 20% of screen width
+    const corgiWidth = width * 0.18; // 18% of screen width
     const corgiHeight = height * 0.10; // 20% of screen height
 
 
