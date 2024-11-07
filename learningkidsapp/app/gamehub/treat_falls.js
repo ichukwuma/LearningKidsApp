@@ -475,7 +475,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
       width: '80%', // Width of the card
-      backgroundColor: '#A7C7E7', // White background for the card
+      // backgroundColor: '#A7C7E7', // White background for the card
+      backgroundColor: 'rgba(167, 199, 231, 0.7)',
       borderRadius: 10, // Rounded corners
       padding: 20, // Padding inside the card
       elevation: 10, // Shadow effect on Android
