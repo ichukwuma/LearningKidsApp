@@ -36,7 +36,7 @@ const TreatQuestions = [
     },
     {
       question: "What do you do if there's a fire in your house?",
-      options: ["Pour water on the fire", "Grab all of your toys and escape", "Run outside and call 911 and your emergency contacts"],
+      options: ["Pour water on the fire", "Grab all of your toys and escape", "Run outside and call 911"],
       answer: 2,
     },
     {
@@ -75,7 +75,7 @@ const TreatQuestions = [
       answer: 2,
     },
     {
-      question: "When can you share pictures  online?",
+      question: "When can you share pictures online?",
       options: ["After asking a trusted adult", "When someone asks how you look", "When you want to share something cool "],
       answer: 0,
     },
@@ -84,8 +84,65 @@ const TreatQuestions = [
       options: ["Try to dodge the cars", "Cross anywhere after some cars pass", "Check both ways twice and cross at a crosswalk"],
       answer: 2,
     },
+    {
+      question: "Someone you don't know offers you candy. Should you take it?",
+      options: ["Yes", "Never", "Only if it's my favorite."],
+      answer: 1,
+    },
+    {
+      question: "What colors are police car lights?",
+      options: ["Pink and White", "Red and Blue", "Red and Green"],
+      answer: 1,
+
+    },
+    {
+      question: "What do you do before crossing the streets?",
+      options: ["Look both ways", "Check your phone", "Nothing"],
+      answer: 0,
+
+    },
+    {
+      question: "If you get hurt at school, who should you go to?",
+      options: ["The nurse's office", "Parents", "Another student"],
+      answer: 0,
+
+    },
+    {
+      question: "If a stranger ask you to follow them and that they know your parents, should you?",
+      options: ["Yes", "No", "Yes, only if you're lost"],
+      answer: 1,
+    },
+    {
+      question: "How many hours of sleep should you get?",
+      options: ["5", "18", "8"],
+      answer: 2,
+
+    },
+    {
+      question: "When you get home, what is the first thing you should do?",
+      options: ["Watch TV", "Go to sleep", "Lock the door"],
+      answer: 2,
+
+    },
+    {
+      question: "What shouldn't you do at home without an adult closeby?",
+      options: ["Turn on the stove", "Sleep", "Watch TV"],
+      answer: 0,
+
+    },
+    {
+      question: "You see a wild animal on the street, should you go up to it?",
+      options: ["Never", "Yes always", "Yes if it looks hurt"],
+      answer: 0,
+
+    },
+    {
+      question: "School is over and your guardian told you they will pick you up. What should you do?",
+      options: ["Walk home by yourself", "Wait to be picked up", "Follow your friend home."],
+      answer: 0,
+
+    },
 
   ];
   
   export default TreatQuestions;
-  
