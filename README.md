@@ -20,3 +20,11 @@
 **HOW TO COMMENT IN JAVASCRIPT: DEPENDS ON WHERE UR CODE IS, SO TRY BOTH MENTIONED BELOW**
 - single and multi line: {/* comment */}
 - // 
+
+**FOR TREAT FALLS GAME DEPENDANCIES**
+Dependencies downloaded:
+npm i react-native-game-engine
+npm i matter-js
+npx expo install expo-status-bar
+
+-> download VS code extension ES7 React/Redux/Grapl (allows to run snippets really fastclear)
