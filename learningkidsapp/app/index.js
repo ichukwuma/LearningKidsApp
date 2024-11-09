@@ -1,11 +1,12 @@
 import React from 'react';
-import { Pressable, Text, View, StyleSheet,Image } from 'react-native';
-import { useFonts, EBGaramond_600SemiBold,EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
+import { Pressable, Text, View, StyleSheet, Image } from 'react-native';
+import { useFonts, EBGaramond_600SemiBold, EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
 import { Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { LogBox } from 'react-native';
 
-
-
+//this is to ignore console log messages showing up on app screen - for demo
+LogBox.ignoreAllLogs();
 export default function landing_screen(clickButton) {
 
   {/*loading fonts here */}
@@ -15,7 +16,6 @@ export default function landing_screen(clickButton) {
   if (!fontsLoaded) {
     return null;
   }
-
 
   const {onPressLanding2} = clickButton;
 

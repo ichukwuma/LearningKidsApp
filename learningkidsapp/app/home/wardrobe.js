@@ -45,15 +45,15 @@ export default function CorgiWardrobe() {
                         setLevel(childData.level || 1);
                         updateImages(childData.level);
 
-                        // Set selectedCorgi based on saved data
+               
                         const savedImage = childData.selectedHatImage;
                         if (savedImage) {
-                            // Match the saved image to the image sources
+                           
                             const matchingImage = allImages.find(image => image === savedImage);
                             if (matchingImage) {
                                 setSelectedCorgi(matchingImage);
                             } else {
-                                // If saved image is not found, default to first available image
+                            
                                 setSelectedCorgi(images[0] || allImages[0]);
                             }
                         }
@@ -65,18 +65,18 @@ export default function CorgiWardrobe() {
     }, [database]);
 
     const updateImages = (level) => {
-        const availableImages = allImages.slice(0, 3); // Start with level 1 images (up to index 2)
+        const availableImages = allImages.slice(0, 3); 
         
-        // Add hats based on the level
-        if (level >= 2) availableImages.push(allImages[3]); // Level 2: Add avocado hat
-        if (level >= 3) availableImages.push(allImages[4]); // Level 3: Add banana hat
-        if (level >= 4) availableImages.push(allImages[5]); // Level 4: Add ice cream hat
-        if (level >= 5) availableImages.push(allImages[6]); // Level 5: Add pizza hat
+       
+        if (level >= 2) availableImages.push(allImages[3]); 
+        if (level >= 3) availableImages.push(allImages[4]); 
+        if (level >= 4) availableImages.push(allImages[5]); 
+        if (level >= 5) availableImages.push(allImages[6]); 
     
         setImages(availableImages);
         
-        // Set default selectedCorgi if not already set
-        if (!selectedCorgi) {
+        
+        if (selectedCorgi) {
             setSelectedCorgi(availableImages[0]);
         }
     };
@@ -129,9 +129,9 @@ export default function CorgiWardrobe() {
                 {selectedCorgi && <Image source={selectedCorgi} style={styles.corgiImage} />}
             </View>
 
-            <Text style={styles.text}>Choose a hat for your Corgi!</Text>
-            <Text style={styles.text}>Tap on a corgi to choose a new</Text>
-            <Text style={styles.text}>or scroll side to side.</Text>
+            <Text style={styles.text}>Swipe side to side below!</Text>
+            <Text style={styles.text}>Tap on a corgi</Text>
+            <Text style={styles.text}>to choose a new hat and save.</Text>
 
             <FlatList
                 data={images}

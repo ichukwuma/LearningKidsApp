@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, Text, View, StyleSheet, Image, ScrollView, FlatList } from 'react-native';
 import { useFonts, EBGaramond_600SemiBold, EBGaramond_800ExtraBold } from '@expo-google-fonts/eb-garamond';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { getDatabase, ref, get } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
@@ -75,7 +74,6 @@ export default function Profile() {
         return null; 
     }
 
-    // Render function for hats with corresponding levels
     const renderItem = ({ item }) => (
         <View style={styles.hatItem}>
             <Image source={item.source} style={styles.hatImage} />
@@ -92,7 +90,6 @@ export default function Profile() {
                     <Image source={require('../../assets/back_arrow.png')} style={styles.back_arrow_img} />
                 </Pressable>
 
-                {/* Parent container for username and profile picture */}
                 <View style={styles.usernameContainer}>
                     <Text style={styles.textBigger}>{child_username}'s Profile</Text>
                 </View>
@@ -106,10 +103,8 @@ export default function Profile() {
                 <View style={styles.xp_text}>
                     <Text style={styles.textBigger}>Level: {level}</Text>
                     <Text style={styles.textBigger}>XP: {xp}/{totalXP}</Text>
-                    {/* Combined message for XP left */}
-                    <Text style={styles.xpLeftText}>
-                       {totalXP - xp} XP LEFT To Level UP, 
-                    </Text>
+                  
+                  
                   
                     <Text style={[styles.center_bold_words, styles.extraTopMargin]}>Want to a new hat?</Text>
                     <Text style={[styles.center_bold_words]}>Scroll Down!
@@ -134,8 +129,8 @@ export default function Profile() {
                     <FlatList
                         data={images}
                         renderItem={renderItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        numColumns={2} // Adjust to change the number of columns
+                        keyExtractor={(index) => index.toString()}
+                        numColumns={2}
                         columnWrapperStyle={styles.row}
                     />
                     <View style={styles.hat_unlock_view}>
