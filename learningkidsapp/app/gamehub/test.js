@@ -7,6 +7,7 @@ import { firestore } from '../config/firebaseConfig';
 import { database } from '../config/firebaseConfig'; // Your Firebase config
 import { ref, onValue } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
+import { isNewBackTitleImplementation } from 'react-native-screens';
 
 export default function Page() {
 
@@ -16,6 +17,7 @@ export default function Page() {
     const [questionNumber, setQuestionNumber] = useState(1);
     const [usedQuestions, setUsedQuestions] = useState([]);
     const [selectedIncorrectAnswers, setSelectedIncorrectAnswers] = useState([]); // Added to store incorrect answers
+    const [shuffledAnswers, setShuffledAnswers] = useState([]);
 
     const getRandomQuestion = (contact) => {
       const randomQuestion = Questions[Math.floor(Math.random() * Questions.length)];
@@ -75,7 +77,17 @@ export default function Page() {
                 } else {
                     setSelectedIncorrectAnswers(selectedIncorrectAnswers);
                 }
-
+                const answersArray = [
+                  <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
+                      <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
+                  </Pressable>,
+                  ...selectedIncorrectAnswers.map((incorrectAnswer, index) => (
+                      <Pressable key={index + 2} style={styles.answers} onPress={() => handleOptionPress(incorrectAnswer)}>
+                          <Text style={styles.answerText}>{incorrectAnswer || 'Missing contact information'}</Text>
+                      </Pressable>
+                  )),
+                ];
+                setShuffledAnswers(shuffleArray(answersArray));
             } else {
                 Alert.alert('No contacts available');
             }
@@ -83,7 +95,12 @@ export default function Page() {
     };
 
     fetchContacts();
-}, []);
+}, [currentQuestion, isCorrect]);
+
+ 
+
+
+
 
 
 
@@ -123,10 +140,7 @@ export default function Page() {
 //hint modal
   const [isModalVisible, setIsModalVisible] = useState(false);
   const showModal = () => {
-    setIsModalVisible(true);
-    // setTimeout(() => {
-    //   setIsModalVisible(false);
-    // }, 9000); 
+    setIsModalVisible(true); 
   };
  
 //retry modal
@@ -158,37 +172,54 @@ const randomNum = getRandomNumber(0,Questions.length);
 //Questions
 const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 const [selectedOption, setSelectedOption] = useState(null);
-const [isCorrect, setIsCorrect] = useState(null);
+const [isCorrect, setIsCorrect] = useState(false);
 
-//console.log({isCorrect});
 //handle pressed option
 const handleOptionPress = (pressedOption) => {
-  const isAnswerCorrect = pressedOption === answer;
-  setSelectedOption(pressedOption);
-  setIsCorrect(isAnswerCorrect)
-
-  if(isAnswerCorrect){
-    increaseXP();
-    incrementScore();
-  }
-  else{
-    setImageCount(imageCount-1);
-    if(imageCount == 1)
-    {
-      setIsRetryModalVisible(true);
+  if (!hasAnswered){
+    const isAnswerCorrect = pressedOption === answer;
+    setSelectedOption(pressedOption);
+    setIsCorrect(isAnswerCorrect)
+    setHasAnswered(true);
+    setIsNextButtonDisabled(false);
+    
+    if(isAnswerCorrect){
+      increaseXP();
+      incrementScore();
+    }
+    else{
+      Alert.alert(`The answer is: ${answer}`);
+      setImageCount(imageCount-1);
+      if(imageCount == 1)
+      {
+        setIsRetryModalVisible(true);
+      }
     }
   }
 };
 
 const getBackgroundColor = (option) => {
-  if (selectedOption === option) {
-    return isCorrect ? 'green' : 'red'; // Correct answer -> green, Incorrect answer -> red
+  console.log("selectedOption:", selectedOption); // Debugging
+  console.log("option:", option); // Debugging
+  console.log("isCorrect:", isCorrect); // Debugging
+  if (selectedOption !== undefined && selectedOption !== null) {
+    //console.log("choosing color");
+    if (String(selectedOption) == String(answer)){
+      return isCorrect ? 'green' : 'red'; // Correct answer -> green, Incorrect answer -> red
+    }
   }
   return 'rgba(211, 211, 211, 0.3)'; // Default background for unselected options
 };
 
+const [hasAnswered, setHasAnswered] = useState(false);
+const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
 const handleNext = () => {
+  setHasAnswered(false); // Re-enable answer choices
+  setSelectedOption(null);
+  setIsCorrect(null);
   if (contacts.length > 0) {
+    setIsNextButtonDisabled(true);
       const randomIndex = Math.floor(Math.random() * contacts.length);
       const randomContact = contacts[randomIndex];
 
@@ -234,13 +265,14 @@ const handleNext = () => {
           setQuestionNumber(questionNumber + 1);
       } else {
           // Handle game completion logic here
-          Alert.alert('Game Over', 'You have completed all questions!');
+          setIsFinishModalVisible(true);
           setQuestionNumber(1); // Reset question number if desired
           setUsedQuestions([]); // Reset used questions for replay
       }
   } else {
       Alert.alert('No contacts available');
   }
+
 };
 
 
@@ -269,7 +301,10 @@ const resetGame = () => {
   setCurrentXP(0); 
   setIsRetryModalVisible(false);
   setSelectedOption(null);
-  setIsCorrect(null);
+  setIsCorrect(false);
+  setIsNextButtonDisabled(true);
+  setHasAnswered(false);
+  
 };
 
 
@@ -286,45 +321,15 @@ function shuffleArray(array) {
 }
 
 
-// const answersArray = [
-//   <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
-//     <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
-//   </Pressable>,
-//   <Pressable key={2} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
-//     <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
-//   </Pressable>,
-//   <Pressable key={3} style={styles.answers} onPress={() => handleOptionPress(Questions[currentQuestionIndex].incorrect)}>
-//     <Text style={styles.answerText}>{Questions[currentQuestionIndex].incorrect || 'Missing contact information'}</Text>
-//   </Pressable>
-// ];
-
-// const answersArray = [
-//   <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
-//       <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
-//   </Pressable>,
-//   ...selectedIncorrectAnswers.map((incorrectAnswer, index) => (
-//       <Pressable key={index + 2} style={styles.answers} onPress={() => handleOptionPress(incorrectAnswer)}>
-//           <Text style={styles.answerText}>{incorrectAnswer || 'Missing contact information'}</Text>
-//       </Pressable>
-//   )),
-// ];
 
 // // Shuffle the answers before rendering
 // const shuffledAnswers = shuffleArray(answersArray);
-const answersArray = [
-  <Pressable key={1} style={styles.answers} onPress={() => handleOptionPress(answer)}>
-      <Text style={styles.answerText}>{answer || 'Select an answer'}</Text>
-  </Pressable>,
-  ...selectedIncorrectAnswers.map((incorrectAnswer, index) => (
-      <Pressable key={index + 2} style={styles.answers} onPress={() => handleOptionPress(incorrectAnswer)}>
-          <Text style={styles.answerText}>{incorrectAnswer || 'Missing contact information'}</Text>
-      </Pressable>
-  )),
-];
+
 
 // Shuffle the answers before rendering
-const shuffledAnswers = shuffleArray(answersArray);
 
+  //const shuffledAnswers = shuffleArray(answersArray);
+  //console.log("array Shuffled");
 
 
   return (
@@ -387,11 +392,11 @@ const shuffledAnswers = shuffleArray(answersArray);
                     Resume
                   </Text>
                 </Pressable>
-                <Pressable style={styles.retryOptions}>
+                {/* <Pressable style={styles.retryOptions}>
                   <Text style={styles.answerText}>
                     Settings
                   </Text>
-                </Pressable>
+                </Pressable> */}
                 <Link href="/gamehub/gamehub_mainscreen" asChild>
                   <Pressable style={styles.retryOptions}>
                     <Text style={styles.answerText}>
@@ -501,8 +506,8 @@ const shuffledAnswers = shuffleArray(answersArray);
 
 
         <View style = {styles.nextButtonArea}>
-          <Pressable style = {({ pressed }) => [styles.nextButton, pressed ? styles.pressedNextButton : styles.nextButton]}
-           onPress={() => {handleNext();}}>
+          <Pressable style = {({ pressed }) => [styles.nextButton, pressed ? styles.pressedNextButton : styles.nextButton, isNextButtonDisabled && {opacity: 0.5}]}
+           onPress={() => {handleNext();}} disabled={isNextButtonDisabled}>
             <Text>NEXT</Text>
           </Pressable>
         </View>
