@@ -16,6 +16,7 @@
     "@react-native-picker/picker": "^2.8.0",
     "@react-navigation/native": "^6.1.18",
     "@urql/core": "^5.0.6",
+    "dotenv-expand": "^11.0.6",
     "expo": "^51.0.32",
     "expo-app-loading": "^1.1.2",
     "expo-constants": "~16.0.2",
