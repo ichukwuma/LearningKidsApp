@@ -36,7 +36,7 @@ export default function Button(clickButton) {
         Questions will be displayed when you get 30 score, and you will have the chance to answer questions to get more points. For each question answered correctly, you get an extra 20 points.
       </Text>
       <Text style={styles.text}>
-        Move corgi left or right to catch treats and dodge anchors. Touching anchors causes your life to go down.
+        Move corgi left or right to catch treats and dodge anchors. Touching anchors causes your life to go down, while touching thhe treat gains a point.
       </Text>
       
       <Link href="gamehub/gamehub_mainscreen" asChild>
