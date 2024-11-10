@@ -8,8 +8,13 @@ import { database } from '../config/firebaseConfig'; // Your Firebase config
 import { ref, onValue } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
 import { isNewBackTitleImplementation } from 'react-native-screens';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 export default function Page() {
+
+  const route = useRoute();
+  const { child_username } = route.params; // Access the child's username
+  const navigation = useNavigation();
 
     const [contacts, setContacts] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState('');
@@ -322,16 +327,6 @@ function shuffleArray(array) {
 
 
 
-// // Shuffle the answers before rendering
-// const shuffledAnswers = shuffleArray(answersArray);
-
-
-// Shuffle the answers before rendering
-
-  //const shuffledAnswers = shuffleArray(answersArray);
-  //console.log("array Shuffled");
-
-
   return (
     <ImageBackground source={require('../../assets/CorgiEscapeBG.png')} style={styles.background}>
       <SafeAreaView style={styles.container}>
@@ -365,7 +360,7 @@ function shuffleArray(array) {
                   </Text>
                 </Pressable>
                 
-                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                <Link href={`/gamehub/gamehub_mainscreen?child_username=${child_username}`} asChild>
                   <Pressable style={styles.retryOptions}>
                     <Text style={styles.answerText}>
                       Game Hub
@@ -397,7 +392,7 @@ function shuffleArray(array) {
                     Settings
                   </Text>
                 </Pressable> */}
-                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                <Link href={`/gamehub/gamehub_mainscreen?child_username=${child_username}`} asChild>
                   <Pressable style={styles.retryOptions}>
                     <Text style={styles.answerText}>
                       GameHub
@@ -432,7 +427,7 @@ function shuffleArray(array) {
                       Play Again
                     </Text>
                 </Pressable>
-                <Link href="/gamehub/gamehub_mainscreen" asChild>
+                <Link href={`/gamehub/gamehub_mainscreen?child_username=${child_username}`} asChild>
                   <Pressable style={styles.retryOptions}>
                       <Text style={styles.answerText}>
                         GameHub
@@ -444,11 +439,6 @@ function shuffleArray(array) {
           </View>
         </Modal>
 
-
-
-
-
-        
           <Pressable style={styles.Backbutton} onPress={() => setIsPauseModalVisible(true)}>
           <Image source={require('../../assets/pause_button.png')}/>
           </Pressable>
@@ -481,14 +471,7 @@ function shuffleArray(array) {
 
         <View style={styles.questionArea}>
           <Text style={styles.questionText}>{currentQuestion}</Text>
-          {/* {Questions.map((item) => (
-            <View>
-              <Text>{item.question}</Text>
-            </View>
-          ))} */}
-          
-          
-          {/*<TextInput style={styles.questions} placeholder='Questions will go here'></TextInput>*/}
+         
         </View>
 
         <View style={styles.answerArea}>
@@ -512,22 +495,13 @@ function shuffleArray(array) {
           </Pressable>
         </View>
 
-      <View style = {styles.hintArea}>
-      <Pressable onPress={showModal}>
-        <Image source={require('../../assets/games/hint2x.png')}/>
-      </Pressable>
-      <Image source={require('../../assets/games/hint2x.png')}/>
-      <Image source={require('../../assets/games/hint2x.png')}/>
-
-
-      </View>
+      
 
       </SafeAreaView>
     </ImageBackground>
 
   );
 }
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -552,6 +526,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0)',
+    width: '100%',
   },
 
   retryBox:{
@@ -592,6 +567,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
     //backgroundColor: 'rgba(128, 128, 128, 0.4)',
   },
   modalView: {
@@ -636,23 +612,6 @@ const styles = StyleSheet.create({
 
 
   },
-  
-  hintArea:
-  {
-    width: '100%',
-    //height: '33%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    position: 'absolute',
-    bottom: 0,
-    paddingHorizontal: 10,
-    marginBottom: 50,
-    alignItems: 'flex-end',
-
-  },
-
-
-
   
   container: {
     flex: 1,
@@ -700,6 +659,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     left: '41.5%',
+    width: '100%'
   },
 
   questionArea:{
@@ -707,10 +667,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
-    height: 250,
+    height: '30%',
     borderWidth: 1,
     borderRadius: 15,
     marginHorizontal: 10,
+    width: '96%',
+    textAlign: 'center',
   },
 
   answerArea: {
@@ -725,18 +687,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
     justifyContent: 'space-between',
     fontFamily: 'EBGaramond_800ExtraBold',
-  
+    height: '35%',
   },
 
   answers: {
-    //backgroundColor: '#f5e8c7',
+    
     backgroundColor: 'rgba(211, 211, 211, 0.1)',
     flexDirection: 'column',
     borderColor: 'black',
     borderWidth: 1,
     alignContent: 'center',
     borderRadius: 15,
-    height: 100,
+    height: '45%',
     //width: 400,
     minWidth: '100%',
     justifyContent: 'center',
@@ -767,15 +729,9 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
-  text: {
-    color: '#000000',
-    fontSize: 12,
-    fontFamily: 'EBGaramond_800ExtraBold'
-},
-
 questionText:
 {
-  fontSize: 25,
+  fontSize: '25%',
   fontFamily: 'EBGaramond_800ExtraBold',
   color: 'white',
   textShadowColor: 'black', // Outline color
@@ -784,7 +740,7 @@ questionText:
 },
 
 answerText: {
-  fontSize: 25,
+  fontSize: '25%',
   fontFamily: 'EBGaramond_800ExtraBold',
   color: 'white',
   textShadowColor: 'black', // Outline color
@@ -803,8 +759,9 @@ nextButtonArea: {
   justifyContent: 'center',
   alignContent: 'center',
   alignItems: 'center',
-
-
+  position: 'absolute',
+  bottom: '5%',
+  width: '100%',
 },
 
 nextButton: {
