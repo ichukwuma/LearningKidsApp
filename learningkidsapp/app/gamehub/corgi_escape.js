@@ -1,4 +1,4 @@
-import { Alert, Button, Image, ImageBackground, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Modal, StatusBar } from 'react-native';
+import { Alert, Button, Image, ImageBackground, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Modal, StatusBar, Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
 import { Questions } from '../config/questions';
@@ -9,11 +9,13 @@ import { ref, onValue } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
 import { isNewBackTitleImplementation } from 'react-native-screens';
 import { useRoute, useNavigation } from '@react-navigation/native';
-
+const { height } = Dimensions.get('window');
 export default function Page() {
 
+  
+
   const route = useRoute();
-  const { child_username } = route.params; // Access the child's username
+  const { child_username } = route.params;
   const navigation = useNavigation();
 
     const [contacts, setContacts] = useState([]);
@@ -103,23 +105,10 @@ export default function Page() {
 }, [currentQuestion, isCorrect]);
 
  
-
-
-
-
-
-
-
-
-
   
     const handleAnswerSelection = () => {
       Alert.alert(`The answer is: ${answer}`); // Show the phone number
     };
-
-
-
-
 
 
 
@@ -179,21 +168,50 @@ const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 const [selectedOption, setSelectedOption] = useState(null);
 const [isCorrect, setIsCorrect] = useState(false);
 
+
+const [hasAnswered, setHasAnswered] = useState(false);
+const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
+const [isCorrectModalVisible, setisCorrectModalVisible] = useState(false);
+
+const showCorrectModal = () => {
+  setisCorrectModalVisible(true);
+  setTimeout(() => {
+  setisCorrectModalVisible(false);
+  }, 1000); 
+};
+
+const [isIncorrectModalVisible, setisIncorrectModalVisible] = useState(false);
+const showIncorrectModal = () => {
+  setisIncorrectModalVisible(true);
+  setTimeout(() => {
+  setisIncorrectModalVisible(false);
+  }, 1000); 
+};
 //handle pressed option
 const handleOptionPress = (pressedOption) => {
   if (!hasAnswered){
-    const isAnswerCorrect = pressedOption === answer;
-    setSelectedOption(pressedOption);
-    setIsCorrect(isAnswerCorrect)
     setHasAnswered(true);
+    const optionText = pressedOption.props.children;
+
+    console.log("has answered", hasAnswered);
+    // const isAnswerCorrect = pressedOption === answer;
+    const isAnswerCorrect = optionText.trim() ===String(answer).trim();
+    setSelectedOption(optionText);
+    setIsCorrect(isAnswerCorrect)
+   
+
+    
     setIsNextButtonDisabled(false);
     
     if(isAnswerCorrect){
       increaseXP();
       incrementScore();
+      showCorrectModal();
     }
     else{
-      Alert.alert(`The answer is: ${answer}`);
+      // Alert.alert(`The answer is: ${answer}`);
+      showIncorrectModal();
       setImageCount(imageCount-1);
       if(imageCount == 1)
       {
@@ -204,20 +222,20 @@ const handleOptionPress = (pressedOption) => {
 };
 
 const getBackgroundColor = (option) => {
-  console.log("selectedOption:", selectedOption); // Debugging
-  console.log("option:", option); // Debugging
-  console.log("isCorrect:", isCorrect); // Debugging
+  // console.log("selectedOption:", selectedOption); // Debugging
+  // console.log("option:", option); // Debugging
+  // console.log("isCorrect:", isCorrect); // Debugging
   if (selectedOption !== undefined && selectedOption !== null) {
     //console.log("choosing color");
     if (String(selectedOption) == String(answer)){
-      return isCorrect ? 'green' : 'red'; // Correct answer -> green, Incorrect answer -> red
+      // return isCorrect ? 'green' : 'red'; // Correct answer -> green, Incorrect answer -> red
+        
     }
   }
   return 'rgba(211, 211, 211, 0.3)'; // Default background for unselected options
 };
 
-const [hasAnswered, setHasAnswered] = useState(false);
-const [isNextButtonDisabled, setIsNextButtonDisabled] = useState(true);
+
 
 const handleNext = () => {
   setHasAnswered(false); // Re-enable answer choices
@@ -439,9 +457,30 @@ function shuffleArray(array) {
           </View>
         </Modal>
 
-          <Pressable style={styles.Backbutton} onPress={() => setIsPauseModalVisible(true)}>
+        {/* Correct/Incorrect Modals */}
+        <Modal animationType='fade' transparent={true} visible={isCorrectModalVisible}>
+          <View style={styles.modalWrapper}>
+            <View style= {styles.correct_incorrect_Modal_Wrapper}>
+              <Text style={styles.answerText}>
+                CORRECT! GOOD JOB!
+              </Text>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal animationType='fade' transparent={true} visible={isIncorrectModalVisible}>
+          <View style={styles.modalWrapper}>
+            <View style= {styles.correct_incorrect_Modal_Wrapper}>
+              <Text style={styles.answerText}>
+                INCORRECT
+              </Text>
+            </View>
+          </View>
+        </Modal>
+
+        <Pressable style={styles.Backbutton} onPress={() => setIsPauseModalVisible(true)}>
           <Image source={require('../../assets/pause_button.png')}/>
-          </Pressable>
+        </Pressable>
         
         <View>
           <Text style={styles.QuestionOrder}>{questionNumber} OF 7</Text>
@@ -475,16 +514,20 @@ function shuffleArray(array) {
         </View>
 
         <View style={styles.answerArea}>
-        {shuffledAnswers.map((answerComponent, index) => (
-    <Pressable
-      key={index}
-      style={[styles.answers, { backgroundColor: getBackgroundColor(answerComponent.props.children) }]}
-      onPress={() => handleOptionPress(answerComponent.props.children)}
-    >
-      {answerComponent}
-    </Pressable>
+  {shuffledAnswers.map((answerComponent, index) => (
+    React.cloneElement(answerComponent, {
+      key: index,
+      style: [
+        styles.answers,
+        { backgroundColor: getBackgroundColor(answerComponent.props.children) },
+        hasAnswered && { opacity: 0.5 },
+      ],
+      onPress: () => handleOptionPress(answerComponent.props.children),
+      disabled: hasAnswered,
+    })
   ))}
-        </View>
+</View>
+
 
 
 
@@ -569,6 +612,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     //backgroundColor: 'rgba(128, 128, 128, 0.4)',
+  },
+  correct_incorrect_Modal_Wrapper: {
+    flex: 1,
+    position: 'absolute',
+    top: height * 0.4,
+    width: "100%",
+
+
   },
   modalView: {
     width: '70%',
