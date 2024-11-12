@@ -202,12 +202,12 @@ const emergency_contact_home = () => {
               placeholder="Phone Number"
               value={newContact.phone}
               onChangeText={(text) => handleInputChange('phone', text)}
-              keyboardType="phone-pad" // Optimizes input for phone numbers
+              keyboardType="phone-pad" 
             />
             <Dropdown
               selectedValue={newContact.relationship}
               onValueChange={(value) => handleInputChange('relationship', value)}
-              options={[//relationship options
+              options={[
                 { label: 'Mother', value: 'Mother' },
                 { label: 'Father', value: 'Father' },
                 { label: 'Grandparent', value: 'Grandparent' },
@@ -240,8 +240,7 @@ const emergency_contact_home = () => {
         ) : (
           <>
 
-            {/* Add Contact Button */}
-             {/*space container for layout*/}
+       
             <View style={styles.space}>
           
             </View>
@@ -250,11 +249,11 @@ const emergency_contact_home = () => {
             </Pressable>
 
             
-             {/*space container for layout*/}
+       
             <View style={styles.space}>
           
             </View>
-            {/* Contacts Display */}
+
             <View style={styles.contactsContainer}>
               {contacts.map((contact, index) => (
                 <View key={index} style={styles.card}>

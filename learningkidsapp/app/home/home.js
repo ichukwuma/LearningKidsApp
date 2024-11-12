@@ -71,7 +71,7 @@ export default function Home({ onPressGameHub, onPressWardrobe}) {
             </View>
 
 
-            {/* settings button */}
+   
             <Link href={`/home/settings?child_username=${child_username}`} asChild>
             <Pressable style={styles.settings_container}>
                     <Image source={require('../../assets/settings_gear.png')} style={styles.settings_gear_image}/>

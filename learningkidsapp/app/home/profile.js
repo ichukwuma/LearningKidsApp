@@ -5,7 +5,6 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 import { getDatabase, ref, get } from 'firebase/database';
 import { auth } from '../config/firebaseConfig';
 
-// Updated images array with levels
 const images = [
     { source: require('../../assets/profiles/cherry_dog.png'), level: 1 },
     { source: require('../../assets/profiles/farmer_dog.png'), level: 1 },
@@ -106,7 +105,7 @@ export default function Profile() {
                   
                   
                   
-                    <Text style={[styles.center_bold_words, styles.extraTopMargin]}>Want to a new hat?</Text>
+                    <Text style={[styles.center_bold_words, styles.extraTopMargin]}>Want a new hat?</Text>
                     <Text style={[styles.center_bold_words]}>Scroll Down!
                     </Text>
                 </View>
@@ -214,7 +213,7 @@ const styles = StyleSheet.create({
     hatUnlockText: {
         fontSize: 24,
         fontFamily: 'EBGaramond_800ExtraBold',
-        marginBottom: 10,
+        marginBottom: 0,
         alignItems: 'center',
     },
     xpLeftText: {

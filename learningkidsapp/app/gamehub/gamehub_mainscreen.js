@@ -49,12 +49,12 @@ export default function gamehub_mainscreen(clickButton) {
         <View style={styles.corgiEscapeContainer}>
             <Image source={require('../../assets/scale5doggo.png')} style={styles.doggoImage} />
             <Text style={styles.CorgiEscapeText} >Corgi Escape</Text>
-            <Link href="/gamehub/corgi_escape_tutorial" asChild>
+            <Link href={`/gamehub/corgi_escape_tutorial?child_username=${child_username}`} asChild>
                 <Pressable style={styles.button} onPressCorgiEscapeTutorial={onPressCorgiEscapeTutorial}>
                     <Text style={styles.text}>{corgiEscapeTutorialBtn}</Text>
                 </Pressable>
             </Link>
-            <Link href="/gamehub/corgi_escape" asChild>
+            <Link href={`/gamehub/corgi_escape?child_username=${child_username}`} asChild>
                 <Pressable style={styles.button} onPressCorgiEscapeStart={onPressCorgiEscapeStart}>
                     <Text style={styles.text}>{corgiEscapeStartBtn}</Text>
                 </Pressable>
