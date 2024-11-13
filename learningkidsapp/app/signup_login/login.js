@@ -47,7 +47,7 @@ export default function LoginForm() {
                 const secondsDiff = Math.floor((now - lastLoginTime) / 1000);
     
                 if (secondsDiff >= 5) {
-                    newXP += 70;
+                    newXP += 100;
                     console.log('XP Increased. New XP:', newXP);
                 }
     
