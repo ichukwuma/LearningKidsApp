@@ -102,8 +102,8 @@ export default function Button(clickButton) {
     position: 'absolute',
     top: 20,
     left: 20,
-    width: 75,
-    height: 75,
+    width: 50,
+    height: 50,
   },
   text: {
     color: '#000000',
