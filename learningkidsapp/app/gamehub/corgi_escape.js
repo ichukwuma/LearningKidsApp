@@ -1,4 +1,4 @@
-import { Alert, Button, Image, ImageBackground, Pressable, SafeAreaView, StyleSheet, Switch, Text, TextInput, View, Modal, StatusBar, Dimensions } from 'react-native';
+import { Alert, Button, Image, ImageBackground, Pressable, SafeAreaView, StyleSheet, Switch, Text, PixelRatio, TextInput, View, Modal, StatusBar, Dimensions } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'expo-router';
 import { Questions } from '../config/questions';
@@ -10,12 +10,13 @@ import { auth } from '../config/firebaseConfig';
 import { isNewBackTitleImplementation } from 'react-native-screens';
 import { useRoute, useNavigation } from '@react-navigation/native';
 const { height } = Dimensions.get('window');
+const fontsize = PixelRatio.getFontScale() * 16;
 export default function Page() {
 
   
 
   const route = useRoute();
-  const { child_username } = route.params;
+  const { child_username } = route.params; // Access the child's username
   const navigation = useNavigation();
 
     const [contacts, setContacts] = useState([]);
@@ -349,24 +350,13 @@ function shuffleArray(array) {
     <ImageBackground source={require('../../assets/CorgiEscapeBG.png')} style={styles.background}>
       <SafeAreaView style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
-        {/* test hint button works */}
-          <Modal animationType='slide' transparent={true} visible={isModalVisible}>
-            <View style={styles.modalWrapper}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>Hint 1 used.</Text>
-              </View>
-              <Pressable style={styles.ModalButton} onPress={() => setIsModalVisible(!isModalVisible)}>
-                <Text>Close</Text>
-              </Pressable>
-            </View>
-          </Modal>
 
         {/* Retry Modal */}
         <Modal animationType='slide' transparent={true} visible={isRetryModalVisible}> 
           <View style={styles.retryModalWrapper}>
             <View style={styles.retryBox}>
                 <View style ={{position: 'absolute', top: 10}}>
-                  <Text style={styles.answerText}>
+                  <Text style={styles.modalText}>
                     OH NO! You ran out of lives. Would you like to retry?
                   </Text>
                 </View>
@@ -422,7 +412,7 @@ function shuffleArray(array) {
           </View>
         </Modal>
 
-
+        {/* Game Completed Modal */}
         <Modal animationType='slide' transparent={true} visible={isFinishModalVisible}>
           <View style={styles.modalWrapper}>
             <View style={styles.retryBox}>
@@ -782,7 +772,7 @@ const styles = StyleSheet.create({
 
 questionText:
 {
-  fontSize: '25%',
+  fontSize: '25',
   fontFamily: 'EBGaramond_800ExtraBold',
   color: 'white',
   textShadowColor: 'black', // Outline color
@@ -791,7 +781,22 @@ questionText:
 },
 
 answerText: {
-  fontSize: '25%',
+  fontSize: '25',
+  fontFamily: 'EBGaramond_800ExtraBold',
+  color: 'white',
+  textShadowColor: 'black', // Outline color
+  textShadowOffset: { width: 2, height: 2 }, 
+  textShadowRadius: 1, // Blur radius for the shadow
+  
+  //width: '90%',
+  //height: '100%',
+  textAlign: 'center',
+  textAlignVertical: 'center',
+  alignItems: 'center',
+  borderRadius: 15,
+},
+modalText: {
+  fontSize: 12,
   fontFamily: 'EBGaramond_800ExtraBold',
   color: 'white',
   textShadowColor: 'black', // Outline color
