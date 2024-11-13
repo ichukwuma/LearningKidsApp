@@ -11,33 +11,16 @@ import TreatQuestions from '../config/treat_questions';
 
 
 const { width, height } = Dimensions.get('window');
-const TREAT_SIZE = 50; // Moved treatSize to a constant at component level
+const TREAT_SIZE = 50; 
 
-//Hitbox definition for debugging, toggle off and on
-// const Hitbox = ({ x, y, width, height }) => {
-//   return (
-//     <View
-//       style={{
-//         position: 'absolute',
-//         left: x,
-//         top: y,
-//         width: width,
-//         height: height,
-//         borderWidth: 2,
-//         borderColor: 'red',
-//         backgroundColor: 'rgba(255, 0, 0, 0.3)',
-//       }}
-//     />
-//   );
-// };
 
 //TreatFalls component
 const TreatFalls = () => {
-  const [running, setRunning] = useState(true);
-  const [gameEngine, setGameEngine] = useState(null);
+  const [running, setRunning] = useState(true); //game running state
+  const [gameEngine, setGameEngine] = useState(null); //game running state
   const [score, setScore] = useState(0); // total game points (per game)
   const [lives, setLives] = useState(3);
-  const [showQuestionModal, setShowQuestionModal] = useState(false); 
+  const [showQuestionModal, setShowQuestionModal] = useState(false); // modal for question pop up
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0); //choose index of question to show (randomly generated later)
   const [isGameOver, setGameOver] = useState(false); // State for game over
   const [xpPoints, setXpPoints] = useState(0); // State to track XP points separate from total game points
@@ -99,7 +82,7 @@ const TreatFalls = () => {
   };
 
   //hitbox conditional state for debugging
-  // const [showHitbox, setShowHitbox] = useState(true); // Toggle to hide after testing
+  //const [showHitbox, setShowHitbox] = useState(true); // Toggle to hide after testing
 
 //Question Answering
   const handleAnswerSelection = (selectedIndex) => {
@@ -108,22 +91,11 @@ const TreatFalls = () => {
       // Reward or provide feedback for the correct answer
       // Increase XP by 20 on a correct answer
       setXpPoints(prevXp => prevXp + 20);
-      // else, no negative effects
-    //For negative effects on if incorrect answer, or to remove lives 
-    // } else {
-    //   setLives(prevLives => {
-    //     const newLives = prevLives - 1;
-    //     if (newLives <= 0) {
-    //       setGameOver(true); // Set game over state
-    //       setRunning(false); // Stop the game
-    //     }
-    //     return newLives;
-    //   });
     }
     // question counter
     setQuestionsAnswered(prevCount => {
       const newCount = prevCount + 1;
-      if (newCount >= 3) {
+      if (newCount >= 15) {
         setGameOver(true);
         setRunning(false); // End the game when 3 questions are answered
       }
@@ -150,7 +122,6 @@ const TreatFalls = () => {
     Object.keys(entities).forEach(key => {
       if (key.startsWith('treat')) {
         const treat = entities[key];
-        //added this
         if (!treat || !treat.body) return;
 
         // one of the factors for changing speed of treats falling
@@ -164,7 +135,6 @@ const TreatFalls = () => {
           });
         }
 
-        // Now using TREAT_SIZE constant
         if (treat.body.position.y > height + TREAT_SIZE) {
           Matter.Composite.remove(world, treat.body);
           delete entities[key];
@@ -178,15 +148,10 @@ const TreatFalls = () => {
             const newScore = prevScore + 1;
 
             // Check if a question should be shown
-            if (newScore % 30 === 0 && questionsAnswered < 3) { // Show a question every 30 points, up to 3 times
+            if (newScore % 15 === 0 && questionsAnswered <= 15) { // Show a question every 15 points, up to 15 times
               setShowQuestionModal(true);
               setCurrentQuestionIndex(Math.floor(Math.random() * TreatQuestions.length));
               setRunning(false); // Pause the game
-
-            // if (newScore % 30 === 0) { //change number to adjust when a question appears after x points collected
-            //   setShowQuestionModal(true);
-            //   setCurrentQuestionIndex(Math.floor(Math.random() * TreatQuestions.length));
-            //   setRunning(false); // Pause the game
 
               
               // Clear existing treats when question appears
@@ -224,22 +189,10 @@ const TreatFalls = () => {
       }
     });
 
-     //function to update XP
-//   const updateUserXp = async (totalXp) => {
-//     const parentId = auth.currentUser?.uid;
-//     if (parentId) {
-//         const childRef = ref(getDatabase(), `parents/${parentId}/children/${child_username}`);
-//         await update(childRef, {
-//             totalXP: totalXP,  // Update the total XP
-//         }).catch((error) => {
-//             console.error("Error updating XP: ", error);
-//         });
-//     }
-// };
 
     //idk about this but it sets game over if lives fall under zero or more than 3 questions are answered
     // Handle game over condition based on lives
-  if (lives <= 0 || questionsAnswered >= 3) {
+  if (lives <= 0 || questionsAnswered >= 15) {
     setGameOver(true);
     setRunning(false);
     // updateUserXp(totalXp); // Call the function to update XP
@@ -275,16 +228,6 @@ const TreatFalls = () => {
             }
           }}
         />
-
-      {/* Hitbox Rendering for Debugging, Toggle off and on */}
-      {/* {showHitbox && entitiesRef.current.Corgi && (
-        <Hitbox
-          x={entitiesRef.current.Corgi.body.bounds.min.x}
-          y={entitiesRef.current.Corgi.body.bounds.min.y}
-          width={entitiesRef.current.Corgi.body.bounds.max.x - entitiesRef.current.Corgi.body.bounds.min.x}
-          height={entitiesRef.current.Corgi.body.bounds.max.y - entitiesRef.current.Corgi.body.bounds.min.y}
-        />
-      )} */}
 
       {/* Displaying score and lives on screen */}
         <Text style={styles.score}>Score: {score}</Text>
@@ -337,17 +280,10 @@ const TreatFalls = () => {
 
 // Stylesheets
 const styles = StyleSheet.create({
-  // container: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',       
-  //   backgroundColor: '#A7C7E7',
-  //   ...StyleSheet.absoluteFillObject
-  // },
   backgroundImage: {
     flex: 1,
     width: '100%',
     height: '100%',
-    // ...StyleSheet.absoluteFillObject
   },
   container: {
     flex: 1,
@@ -365,7 +301,7 @@ const styles = StyleSheet.create({
     right: 20,
     fontSize: 24,
     zIndex: 1,
-    color: 'white', // Changed to white for better visibility on background
+    color: 'white',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 1},
     textShadowRadius: 10
@@ -376,7 +312,7 @@ const styles = StyleSheet.create({
     right: 20,
     fontSize: 24,
     zIndex: 1,
-    color: 'white', // Changed to white for better visibility on background
+    color: 'white',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: {width: -1, height: 1},
     textShadowRadius: 10
@@ -399,7 +335,7 @@ const styles = StyleSheet.create({
     fontFamily: 'EBGaramond_800ExtraBold'
   },
   gameOverBackButton:{
-    width: 175, // Set a fixed width or use maxWidth
+    width: 175,
     padding: 10,
     marginTop: 50,
     backgroundColor: '#f7e7b4',
@@ -474,13 +410,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContainer: {
-      width: '80%', // Width of the card
-      // backgroundColor: '#A7C7E7', // White background for the card
+      width: '80%',
       backgroundColor: 'rgba(167, 199, 231, 0.7)',
-      borderRadius: 10, // Rounded corners
-      padding: 20, // Padding inside the card
-      elevation: 10, // Shadow effect on Android
-      shadowColor: '#000', // Shadow color for iOS
+      borderRadius: 10,
+      padding: 20,
+      elevation: 10,
+      shadowColor: '#000',
       shadowOffset: {
           width: 0,
           height: 2,
