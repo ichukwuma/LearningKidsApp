@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
         marginTop: 20, 
     },
     backArrow: {
-        width: 75,
-        height: 75,
+        width: 50,
+        height: 50,
         transform: [{ scaleX: -1 }], 
     },
     space: {
