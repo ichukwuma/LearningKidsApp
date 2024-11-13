@@ -65,7 +65,7 @@ export default function gamehub_mainscreen(clickButton) {
         <View style={styles.treatFallsContainer}>
             <Image source={require('../../assets/games/Dog_biscuit.png')} style={styles.treatFallsImage} />
             <Text style={styles.TreatFallsText}>Treat Falls</Text>
-            <Link href="/gamehub/treat_falls_tutorial" asChild>
+            <Link href={`/gamehub/treat_falls_tutorial?child_username=${child_username}`} asChild>
                 <Pressable style={styles.button} onPressTreatFallsTutorial={onPressTreatFallsTutorial}>
                     <Text style={styles.text}>{treatFallsTutorialBtn}</Text>
                 </Pressable>
@@ -149,8 +149,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 20,
         left: 20,
-        width: 75,
-        height: 75,
+        width: 50,
+        height: 50,
       },
 
   });
