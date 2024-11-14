@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         position: 'absolute',
-        top: 120,
+        top: 45,
+        
     },
     back_arrow_img: {
         position: 'absolute',
@@ -181,16 +182,17 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
         fontFamily: 'EBGaramond_800ExtraBold',
+        marginLeft: 30,
     },
     corgi: {
         marginBottom: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 160,
+        marginTop: 120,
     },
     corgiImage: {
-        width: 220,
-        height: 220,
+        width: 175,
+        height: 175,
         resizeMode: 'contain',
     },
     scrollImage: {

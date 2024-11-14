@@ -39,6 +39,7 @@ const MultiSelectComponent = /*#__PURE__*/React.forwardRef((props, currentRef) =
     iconColor = 'gray',
     inputSearchStyle,
     searchPlaceholder,
+    searchPlaceholderTextColor = 'gray',
     placeholder = 'Select item',
     search = false,
     maxHeight = 340,
@@ -115,8 +116,10 @@ const MultiSelectComponent = /*#__PURE__*/React.forwardRef((props, currentRef) =
     }
   }, [excludeItems, valueField]);
   useEffect(() => {
-    const filterData = excludeData(data);
-    setListData([...filterData]);
+    if (data && searchText.length === 0) {
+      const filterData = excludeData(data);
+      setListData([...filterData]);
+    }
     if (searchText) {
       onSearch(searchText);
     }
@@ -124,6 +127,7 @@ const MultiSelectComponent = /*#__PURE__*/React.forwardRef((props, currentRef) =
   }, [data, searchText]);
   const eventOpen = () => {
     if (!disable) {
+      _measure();
       setVisible(true);
       if (onFocus) {
         onFocus();
@@ -205,8 +209,10 @@ const MultiSelectComponent = /*#__PURE__*/React.forwardRef((props, currentRef) =
       }
       _measure();
       setVisible(visibleStatus);
-      const filterData = excludeData(data);
-      setListData(filterData);
+      if (data) {
+        const filterData = excludeData(data);
+        setListData(filterData);
+      }
       if (visibleStatus) {
         if (onFocus) {
           onFocus();
@@ -353,7 +359,8 @@ const MultiSelectComponent = /*#__PURE__*/React.forwardRef((props, currentRef) =
             }
             onSearch(e);
           },
-          placeholderTextColor: "gray",
+          showIcon: true,
+          placeholderTextColor: searchPlaceholderTextColor,
           iconStyle: [{
             tintColor: iconColor
           }, iconStyle]
@@ -361,7 +368,7 @@ const MultiSelectComponent = /*#__PURE__*/React.forwardRef((props, currentRef) =
       }
     }
     return null;
-  }, [accessibilityLabel, font, iconColor, iconStyle, inputSearchStyle, onChangeText, onSearch, renderInputSearch, search, searchPlaceholder, testID]);
+  }, [accessibilityLabel, font, iconColor, iconStyle, inputSearchStyle, onChangeText, onSearch, renderInputSearch, search, searchPlaceholder, searchPlaceholderTextColor, testID]);
   const _renderList = useCallback(isTopPosition => {
     const isInverted = !inverted ? false : isTopPosition;
     const _renderListHelper = () => {
