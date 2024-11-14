@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         position: 'absolute',
-        top: 350,
+        top: 250,
 
     },
     settings_container:{

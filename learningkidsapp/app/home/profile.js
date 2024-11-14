@@ -119,7 +119,6 @@ export default function Profile() {
                     <Text style={styles.text}>1. Log into the app everyday to earn xp.</Text>
                     <Text style={styles.text}>2. Play your games located in gamehub!</Text>
                     <Text style={styles.text}>3. Earn enough xp to level up your corgi.</Text>
-                    <Text style={styles.text}>4. When your Corgi levels up go to your corgi wardrobe and choose your new hat!</Text>
                     </View>
                     
                 </View>

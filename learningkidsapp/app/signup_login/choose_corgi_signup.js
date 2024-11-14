@@ -81,6 +81,7 @@ export default function Choose_Corgi_Hat_Signup() {
                 <Image source={images[currentImageIndex]} style={styles.corgiImage} />
             </View>
 
+        
             <Text style={styles.text}>Choose a hat for your Corgi!</Text>
             <Text style={styles.text}>Tap on a corgi</Text>
             <Text style={styles.text}>or scroll side to side.</Text>
@@ -120,7 +121,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row', 
         alignItems: 'flex-start', 
         position: 'absolute',
-        top: 120,
+        top: 10,
     },
     back_arrow_img: {
         position: 'absolute',
@@ -132,14 +133,15 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         textAlign: 'center',
-        marginBottom: 20,
+        marginTop: 40,
+        marginLeft: 20,
         fontFamily: 'EBGaramond_800ExtraBold',
     },
     corgi: {
         marginBottom: 0,
         alignItems: 'center',
         justifyContent: 'center',
-        marginTop: 160,
+        marginTop: 65,
     },
     corgiImage: {
         width: 220, 
